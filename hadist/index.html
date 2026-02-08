@@ -1,1 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadith Center - Digital Hadith Archive</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts (Inter & Amiri untuk Arab) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Konfigurasi Tailwind Kustom (Persis sama dengan aslinya) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050000',      
+                        'dark-card': '#100202',
+                        primary: '#ff0055',    
+                        secondary: '#ff4d80',  
+                        accent: '#ff99aa',     
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arab: ['Amiri', 'serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(255, 0, 85, 0.3)',
+                        'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                        'spin-slow': 'spin 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
+    <style>
+        /* Scrollbar Kustom */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050000; }
+        ::-webkit-scrollbar-thumb { background: #66001a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(16, 2, 2, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 0, 85, 0.15);
+        }
+
+        /* Background Ambient Animation */
+        @keyframes ambient-pulse-slow {
+            0%, 100% { opacity: 0.05; transform: scale(1); }
+            50% { opacity: 0.1; transform: scale(1.05); }
+        }
+        .bg-ambient-1 { animation: ambient-pulse-slow 12s ease-in-out infinite; }
+        .bg-ambient-2 { animation: ambient-pulse-slow 18s ease-in-out infinite alternate; }
+
+        /* Custom Selection */
+        ::selection { background: #ff0055; color: white; }
+    </style>
+</head>
+<body class="bg-[#050000] text-gray-200 min-h-screen font-sans overflow-x-hidden selection:bg-primary selection:text-white relative">
+
+    <!-- Background Gradient Aesthetic -->
+    <div class="fixed inset-0 z-0 pointer-events-none bg-[#050000]">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050000] via-[#0a0202] to-[#050000] opacity-100"></div>
+        
+        <!-- Glowing Orbs -->
+        <div class="absolute top-[-15%] left-[-15%] w-[800px] h-[800px] bg-primary rounded-full mix-blend-screen filter blur-[200px] opacity-[0.05] bg-ambient-1"></div>
+        <div class="absolute bottom-[-15%] right-[-15%] w-[900px] h-[900px] bg-secondary rounded-full mix-blend-screen filter blur-[220px] opacity-[0.05] bg-ambient-2"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <a href="?" class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center animate-pulse-slow shadow-glow">
+                            <i class="fa-solid fa-book-quran text-white text-lg"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-wide text-white">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">Hadith Center</span>
+                        </span>
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="?" id="nav-home" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Beranda</a>
+                        <a href="?action=random" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Acak</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-28 pb-12 px-4 max-w-7xl mx-auto min-h-screen flex flex-col">
+        
+        <!-- SEARCH SECTION -->
+        <section class="mb-12 animate-fade-in-up">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent drop-shadow-sm">
+                    Kumpulan Hadist Nabi SAW
+                </h1>
+                <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+                    Jelajahi ribuan hadist dari 4 kitab utama. Cari berdasarkan kata kunci bahasa Arab atau terjemahan Indonesia.
+                </p>
+            </div>
+
+            <!-- Search Bar -->
+            <form action="?" method="GET" class="max-w-3xl mx-auto relative group">
+                <input type="hidden" name="kitab" id="input-kitab-hidden">
+                <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative flex items-center glass-panel rounded-2xl p-2 shadow-2xl">
+                    <div class="pl-4 text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </div>
+                    <input type="text" name="q" id="search-input"
+                        class="w-full bg-transparent border-none text-white text-lg px-4 py-3 focus:ring-0 placeholder-gray-600 font-light"
+                        placeholder="Cari hadist (contoh: puasa, sholat, صلاة)...">
+                    <button type="submit" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-xl font-bold shadow-glow-sm hover:brightness-110 transition-all">
+                        Cari
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- LOADING INDICATOR -->
+        <div id="loading-state" class="hidden text-center py-20 animate-fade-in-up">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-primary mb-4"></i>
+            <p class="text-gray-400">Memuat data...</p>
+        </div>
+
+        <!-- KITAB LIST SECTION -->
+        <section id="kitab-section" class="animate-fade-in-up hidden" style="animation-delay: 0.1s;">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2 border-b border-white/10 pb-2">
+                <i class="fa-solid fa-layer-group text-primary"></i> Daftar Kitab
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="kitab-grid">
+                <!-- Kitab cards will be injected here via JS -->
+            </div>
+        </section>
+
+        <!-- HADITH RESULTS SECTION -->
+        <section id="results-section" class="animate-fade-in-up hidden" style="animation-delay: 0.2s;">
+            
+            <!-- Breadcrumb / Filter Info -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 id="result-title" class="text-2xl font-bold text-white flex items-center gap-2">
+                        <!-- Title injected via JS -->
+                    </h2>
+                    <p id="result-meta" class="text-gray-500 text-sm mt-1">
+                        <!-- Meta injected via JS -->
+                    </p>
+                </div>
+                <a href="?" class="text-sm text-primary hover:text-white underline decoration-primary/50 underline-offset-4 flex items-center gap-1 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Kitab
+                </a>
+            </div>
+
+            <!-- Hadith Cards Grid -->
+            <div class="grid grid-cols-1 gap-6" id="hadith-container">
+                <!-- Cards injected via JS -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination-container" class="flex justify-center gap-4 mt-8">
+                <!-- Pagination buttons injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300">
+        <div class="glass-panel px-6 py-3 rounded-lg shadow-glow border border-primary/30 flex items-center gap-3">
+            <i class="fa-solid fa-check-circle text-primary"></i>
+            <span class="text-white font-medium text-sm">Teks berhasil disalin!</span>
+        </div>
+    </div>
+
+    <!-- LOGIKA JAVASCRIPT -->
+    <script>
+        // --- KONFIGURASI DATA ---
+        // Daftar Kitab yang tersedia (Sesuai file JSON)
+        const kitabs_list = {
+            'shahih_bukhari': 'Shahih Bukhari',
+            'shahih_muslim': 'Shahih Muslim',
+            'sunan_tirmidzi': 'Sunan Tirmidzi',
+            'sunan_ibnu_majah': 'Sunan Ibnu Majah'
+        };
+
+        // State Aplikasi
+        const state = {
+            query: '',
+            selectedKitab: '',
+            page: 1,
+            limit: 10,
+            results: [],
+            totalFound: 0
+        };
+
+        // --- FUNGSI UTILITAS ---
+
+        // Ambil parameter dari URL
+        function getParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            state.query = urlParams.get('q') || '';
+            state.selectedKitab = urlParams.get('kitab') || '';
+            state.page = parseInt(urlParams.get('page')) || 1;
+        }
+
+        // Update URL tanpa reload
+        function updateURL() {
+            const url = new URL(window.location);
+            url.searchParams.set('page', state.page);
+            if (state.query) url.searchParams.set('q', state.query);
+            else url.searchParams.delete('q');
+            
+            if (state.selectedKitab) url.searchParams.set('kitab', state.selectedKitab);
+            else url.searchParams.delete('kitab');
+
+            window.history.replaceState({}, '', url);
+        }
+
+        // Escape HTML untuk mencegah XSS (saat render data JSON)
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Format Arab (biar newlines terbaca)
+        function formatArabic(text) {
+            return escapeHtml(text).replace(/\n/g, '<br>');
+        }
+
+        // Format Terjemah
+        function formatTranslation(text) {
+            return escapeHtml(text).replace(/\n/g, '<br>');
+        }
+
+        // --- DATA HANDLING ---
+
+        // Fetch & Parse JSON
+        async function fetchHadithData(filename) {
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) throw new Error(`Gagal memuat ${filename}`);
+                const json = await response.json();
+                
+                // Struktur JSON dari User:
+                // [{type:"header"...}, {type:"table", data:[...]}]
+                const tableObj = json.find(item => item.type === 'table');
+                return tableObj ? tableObj.data : [];
+            } catch (error) {
+                console.error("Error loading JSON:", error);
+                return [];
+            }
+        }
+
+        // Logic Pencarian
+        function filterData(data, query) {
+            if (!query) return data;
+            const lowerQ = query.toLowerCase();
+            return data.filter(item => {
+                const arabText = item.arab || '';
+                const indoText = item.terjemah || '';
+                return arabText.toLowerCase().includes(lowerQ) || 
+                       indoText.toLowerCase().includes(lowerQ);
+            });
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderLoading(show) {
+            const el = document.getElementById('loading-state');
+            if (show) {
+                el.classList.remove('hidden');
+                document.getElementById('kitab-section').classList.add('hidden');
+                document.getElementById('results-section').classList.add('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function renderKitabList() {
+            const container = document.getElementById('kitab-grid');
+            container.innerHTML = '';
+
+            Object.entries(kitabs_list).forEach(([key, name], index) => {
+                const card = document.createElement('a');
+                card.href = `?kitab=${key}`;
+                card.className = "glass-panel p-6 rounded-2xl transform hover:-translate-y-2 transition-all duration-300 group cursor-pointer border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden";
+                card.style.animationDelay = `${index * 0.05}s`; // Staggered animation
+                
+                card.innerHTML = `
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10 flex items-start justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-1 group-hover:text-primary transition-colors">${name}</h3>
+                            <p class="text-gray-500 text-sm">Kumpulan hadist terpercaya</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('kitab-section').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            
+            // Update Nav Active State
+            updateNavState(false);
+        }
+
+        function renderResults() {
+            const container = document.getElementById('hadith-container');
+            container.innerHTML = '';
+
+            // Set Judul
+            const titleEl = document.getElementById('result-title');
+            const metaEl = document.getElementById('result-meta');
+            
+            if (state.selectedKitab) {
+                titleEl.innerHTML = `<i class="fa-solid fa-scroll text-primary"></i> ${kitabs_list[state.selectedKitab]}`;
+            } else {
+                titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass text-primary"></i> Hasil Pencarian: "${escapeHtml(state.query)}"`;
+            }
+            
+            // Pagination Logic (Slicing Array)
+            const startIndex = (state.page - 1) * state.limit;
+            const endIndex = startIndex + state.limit;
+            const pageData = state.results.slice(startIndex, endIndex);
+            
+            metaEl.textContent = `Menampilkan ${Math.min(endIndex, state.totalFound)} dari ${state.totalFound} hadist`;
+
+            // Update Nav Active State
+            updateNavState(true);
+
+            if (pageData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20 glass-panel rounded-2xl border-dashed border-2 border-white/5">
+                        <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600 mb-4"></i>
+                        <h3 class="text-xl font-bold text-white mb-2">Tidak ditemukan</h3>
+                        <p class="text-gray-500">Coba kata kunci lain atau pilih kitab yang berbeda.</p>
+                        <div class="mt-6">
+                            <a href="?" class="text-primary hover:underline">Reset Pencarian</a>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('pagination-container').innerHTML = '';
+                return;
+            }
+
+            // Render Cards
+            pageData.forEach((hadith, index) => {
+                // Determine global index for unique IDs
+                const globalIndex = startIndex + index;
+                const sourceName = hadith.kitab ? kitabs_list[hadith.kitab] || hadith.kitab : (state.selectedKitab ? kitabs_list[state.selectedKitab] : 'Unknown');
+                
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl p-6 md:p-8 relative hover:border-primary/30 transition-colors duration-300 group animate-fade-in-up";
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                            <i class="fa-solid fa-star text-[10px] mr-2"></i> ${sourceName}
+                        </span>
+                        <div class="flex gap-2">
+                            <button onclick="copyText('arab-${globalIndex}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-primary hover:text-white flex items-center justify-center transition-all text-gray-400" title="Salin Arab">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-right mb-6 relative">
+                        <div id="arab-${globalIndex}" class="font-arabic text-2xl md:text-3xl leading-[2.2] text-white/90" dir="rtl">
+                            ${formatArabic(hadith.arab)}
+                        </div>
+                    </div>
+
+                    <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+
+                    <div class="text-gray-300 leading-relaxed text-lg font-light text-justify">
+                        ${formatTranslation(hadith.terjemah)}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            container.innerHTML = '';
+            
+            const totalPages = Math.ceil(state.totalFound / state.limit);
+
+            if (totalPages <= 1) return;
+
+            // Prev Button
+            if (state.page > 1) {
+                const prevBtn = createPageBtn(state.page - 1, "Prev");
+                container.appendChild(prevBtn);
+            }
+
+            // Page Indicator
+            const span = document.createElement('span');
+            span.className = "px-6 py-2 text-primary font-bold";
+            span.textContent = `Halaman ${state.page}`;
+            container.appendChild(span);
+
+            // Next Button
+            if (state.page < totalPages) {
+                const nextBtn = createPageBtn(state.page + 1, "Next");
+                container.appendChild(nextBtn);
+            }
+        }
+
+        function createPageBtn(pageNum, text) {
+            const btn = document.createElement('a');
+            btn.href = "#";
+            btn.textContent = text;
+            btn.className = "px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-all";
+            btn.onclick = (e) => {
+                e.preventDefault();
+                state.page = pageNum;
+                updateURL();
+                renderResults();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            return btn;
+        }
+
+        function updateNavState(isResultView) {
+            const homeLink = document.getElementById('nav-home');
+            if (!isResultView) {
+                homeLink.classList.remove('text-gray-400');
+                homeLink.classList.add('bg-primary', 'text-white', 'shadow-glow-sm');
+            } else {
+                homeLink.classList.add('text-gray-400');
+                homeLink.classList.remove('bg-primary', 'text-white', 'shadow-glow-sm');
+            }
+        }
+
+        // --- MAIN INITIALIZATION ---
+
+        async function init() {
+            getParams();
+            
+            // Set search input value
+            document.getElementById('search-input').value = state.query;
+            document.getElementById('input-kitab-hidden').value = state.selectedKitab;
+
+            renderLoading(true);
+
+            // Logic Routing
+            if (!state.selectedKitab && !state.query) {
+                // MODE: HOME (List Kitab)
+                renderLoading(false);
+                renderKitabList();
+            } 
+            else if (state.selectedKitab) {
+                // MODE: FILTER BY KITAB
+                const filename = `${state.selectedKitab}.json`;
+                const data = await fetchHadithData(filename);
+                const filtered = filterData(data, state.query);
+                
+                state.results = filtered;
+                state.totalFound = filtered.length;
+                
+                renderLoading(false);
+                document.getElementById('kitab-section').classList.add('hidden');
+                document.getElementById('results-section').classList.remove('hidden');
+                renderResults();
+            } 
+            else if (state.query) {
+                // MODE: GLOBAL SEARCH (Cari di semua file)
+                const keys = Object.keys(kitabs_list);
+                const promises = keys.map(k => fetchHadithData(`${k}.json`));
+                
+                const allDataArrays = await Promise.all(promises);
+                let combinedData = [];
+                
+                // Gabungkan semua array data
+                allDataArrays.forEach(arr => {
+                    combinedData = [...combinedData, ...arr];
+                });
+
+                const filtered = filterData(combinedData, state.query);
+                state.results = filtered;
+                state.totalFound = filtered.length;
+
+                renderLoading(false);
+                document.getElementById('kitab-section').classList.add('hidden');
+                document.getElementById('results-section').classList.remove('hidden');
+                renderResults();
+            }
+        }
+
+        // --- EVENT LISTENERS & GLOBAL FUNCTIONS ---
+
+        // Copy Function
+        window.copyText = function(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('Gagal menyalin: ', err);
+            });
+        }
+
+        // Toast Function
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Parallax Effect
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX * -0.01);
+            const moveY = (e.clientY * -0.01);
+            const ambient1 = document.querySelector('.bg-ambient-1');
+            if(ambient1) ambient1.style.transform = `translate(${moveX}px, ${moveY}px) scale(1)`;
+        });
+
+        // Jalankan saat load
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+  </html>
