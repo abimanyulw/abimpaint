@@ -16,42 +16,59 @@
     
     <!-- Konfigurasi Tailwind Kustom (Persis sama dengan aslinya) -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#050000',      
-                        'dark-card': '#100202',
-                        primary: '#ff0055',    
-                        secondary: '#ff4d80',  
-                        accent: '#ff99aa',     
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        arab: ['Amiri', 'serif'],
-                    },
-                    boxShadow: {
-                        'glow': '0 0 20px rgba(255, 0, 85, 0.3)',
-                        'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
-                        'spin-slow': 'spin 2s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+        // Pastikan tailwind tersedia sebelum men-set tailwind.config
+        try {
+            if (typeof tailwind !== 'undefined') {
+                tailwind.config = {
+                    theme: {
+                        extend: {
+                            colors: {
+                                dark: '#050000',      
+                                'dark-card': '#100202',
+                                primary: '#ff0055',    
+                                secondary: '#ff4d80',  
+                                accent: '#ff99aa',     
+                            },
+                            fontFamily: {
+                                sans: ['Inter', 'sans-serif'],
+                                arab: ['Amiri', 'serif'],
+                            },
+                            boxShadow: {
+                                'glow': '0 0 20px rgba(255, 0, 85, 0.3)',
+                                'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)',
+                            },
+                            animation: {
+                                'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                                'float': 'float 6s ease-in-out infinite',
+                                'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                                'spin-slow': 'spin 2s linear infinite',
+                            },
+                            keyframes: {
+                                float: {
+                                    '0%, 100%': { transform: 'translateY(0)' },
+                                    '50%': { transform: 'translateY(-10px)' },
+                                },
+                                fadeInUp: {
+                                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                // jika tailwind belum ada (rare), simpan config ke global supaya tailwind CDN bisa pakai jika nanti membaca
+                window.tailwindConfig = {
+                    theme: {
+                        extend: {
+                            colors: { primary: '#ff0055', secondary: '#ff4d80', accent: '#ff99aa' },
+                            fontFamily: { sans: ['Inter', 'sans-serif'], arab: ['Amiri', 'serif'] }
+                        }
+                    }
+                };
             }
+        } catch (e) {
+            console.warn('Tailwind config warning:', e);
         }
     </script>
 
@@ -80,6 +97,9 @@
 
         /* Custom Selection */
         ::selection { background: #ff0055; color: white; }
+
+        /* Fallback: pastikan font arab ditampilkan walau Tailwind tidak menghasilkan kelas font-ar */
+        .font-arabic { font-family: 'Amiri', serif; }
     </style>
 </head>
 <body class="bg-[#050000] text-gray-200 min-h-screen font-sans overflow-x-hidden selection:bg-primary selection:text-white relative">
@@ -206,8 +226,7 @@
 
     <!-- LOGIKA JAVASCRIPT -->
     <script>
-        // --- KONFIGURASI DATA ---
-        // Daftar Kitab yang tersedia (Sesuai file JSON)
+        // --- KONFIGURASI DATA --- (tetap seperti semula)
         const kitabs_list = {
             'shahih_bukhari': 'Shahih Bukhari',
             'shahih_muslim': 'Shahih Muslim',
@@ -225,9 +244,26 @@
             totalFound: 0
         };
 
+        // --- Fallback internal JSON data (dipakai jika file JSON tidak ditemukan) ---
+        // Minimal sample supaya UI tidak kosong. Anda bisa ganti/isi dengan data lengkap nantinya.
+        const fallbackData = {
+            'shahih_bukhari': [
+                { kitab: 'shahih_bukhari', arab: 'إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ', terjemah: 'Sesungguhnya amal itu tergantung pada niatnya.' },
+                { kitab: 'shahih_bukhari', arab: 'طَلَبُ الْعِلْمِ فَرِيضَةٌ', terjemah: 'Menuntut ilmu itu wajib bagi setiap muslim.' }
+            ],
+            'shahih_muslim': [
+                { kitab: 'shahih_muslim', arab: 'الدِّينُ النَّصِيحَةُ', terjemah: 'Agama adalah nasihat.' }
+            ],
+            'sunan_tirmidzi': [
+                { kitab: 'sunan_tirmidzi', arab: 'إِيَّاكُمْ وَالْحَسَدَ', terjemah: 'Hindarilah dengki.' }
+            ],
+            'sunan_ibnu_majah': [
+                { kitab: 'sunan_ibnu_majah', arab: 'مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا', terjemah: 'Barangsiapa menempuh jalan untuk mencari ilmu...' }
+            ]
+        };
+
         // --- FUNGSI UTILITAS ---
 
-        // Ambil parameter dari URL
         function getParams() {
             const urlParams = new URLSearchParams(window.location.search);
             state.query = urlParams.get('q') || '';
@@ -235,7 +271,6 @@
             state.page = parseInt(urlParams.get('page')) || 1;
         }
 
-        // Update URL tanpa reload
         function updateURL() {
             const url = new URL(window.location);
             url.searchParams.set('page', state.page);
@@ -248,10 +283,9 @@
             window.history.replaceState({}, '', url);
         }
 
-        // Escape HTML untuk mencegah XSS (saat render data JSON)
         function escapeHtml(text) {
-            if (!text) return '';
-            return text
+            if (text === undefined || text === null) return '';
+            return String(text)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
@@ -259,42 +293,58 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Format Arab (biar newlines terbaca)
         function formatArabic(text) {
             return escapeHtml(text).replace(/\n/g, '<br>');
         }
 
-        // Format Terjemah
         function formatTranslation(text) {
             return escapeHtml(text).replace(/\n/g, '<br>');
         }
 
         // --- DATA HANDLING ---
 
-        // Fetch & Parse JSON
-        async function fetchHadithData(filename) {
+        // Fetch & Parse JSON dengan fallback internal bila gagal
+        async function fetchHadithData(filenameOrKey) {
+            // filenameOrKey biasanya "shahih_bukhari.json" atau "shahih_bukhari"
+            // Normalisasi kunci
+            let key = filenameOrKey.replace('.json', '');
+
+            // Jika ada file JSON di server, coba fetch dulu.
+            // Jika gagal (404, network, CORS), gunakan fallbackData internal.
             try {
-                const response = await fetch(filename);
-                if (!response.ok) throw new Error(`Gagal memuat ${filename}`);
+                // Jika filenameOrKey tampak seperti path (mengandung .json), pakai itu.
+                const url = filenameOrKey.endsWith('.json') ? filenameOrKey : `${key}.json`;
+
+                // Coba fetch; timeout sederhana tidak tersedia, jadi kita andalkan catch bila error.
+                const response = await fetch(url, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`Gagal memuat ${url}: ${response.status}`);
                 const json = await response.json();
-                
-                // Struktur JSON dari User:
-                // [{type:"header"...}, {type:"table", data:[...]}]
-                const tableObj = json.find(item => item.type === 'table');
-                return tableObj ? tableObj.data : [];
+
+                // Struktur JSON yang diharapkan oleh kode awal: [{type:"header"...}, {type:"table", data:[...]}]
+                if (Array.isArray(json)) {
+                    const tableObj = json.find(item => item && item.type === 'table');
+                    if (tableObj && Array.isArray(tableObj.data)) return tableObj.data;
+                }
+
+                // Jika struktur tidak sesuai, coba kalau file itu sendiri return array of hadith
+                if (Array.isArray(json)) return json;
+
+                // Kalau bukan array, fallback
+                console.warn('JSON dimuat tapi struktur tidak seperti diharapkan, menggunakan fallback internal.');
+                return fallbackData[key] || [];
             } catch (error) {
-                console.error("Error loading JSON:", error);
-                return [];
+                // Bila fetch gagal (CORS/404/offline), gunakan fallback internal
+                console.warn('fetchHadithData gagal, menggunakan fallback internal untuk', filenameOrKey, error);
+                return fallbackData[key] || [];
             }
         }
 
-        // Logic Pencarian
         function filterData(data, query) {
             if (!query) return data;
             const lowerQ = query.toLowerCase();
             return data.filter(item => {
-                const arabText = item.arab || '';
-                const indoText = item.terjemah || '';
+                const arabText = (item.arab || '') + '';
+                const indoText = (item.terjemah || '') + '';
                 return arabText.toLowerCase().includes(lowerQ) || 
                        indoText.toLowerCase().includes(lowerQ);
             });
@@ -341,7 +391,6 @@
             document.getElementById('kitab-section').classList.remove('hidden');
             document.getElementById('results-section').classList.add('hidden');
             
-            // Update Nav Active State
             updateNavState(false);
         }
 
@@ -349,7 +398,6 @@
             const container = document.getElementById('hadith-container');
             container.innerHTML = '';
 
-            // Set Judul
             const titleEl = document.getElementById('result-title');
             const metaEl = document.getElementById('result-meta');
             
@@ -359,14 +407,12 @@
                 titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass text-primary"></i> Hasil Pencarian: "${escapeHtml(state.query)}"`;
             }
             
-            // Pagination Logic (Slicing Array)
             const startIndex = (state.page - 1) * state.limit;
             const endIndex = startIndex + state.limit;
             const pageData = state.results.slice(startIndex, endIndex);
             
             metaEl.textContent = `Menampilkan ${Math.min(endIndex, state.totalFound)} dari ${state.totalFound} hadist`;
 
-            // Update Nav Active State
             updateNavState(true);
 
             if (pageData.length === 0) {
@@ -384,9 +430,7 @@
                 return;
             }
 
-            // Render Cards
             pageData.forEach((hadith, index) => {
-                // Determine global index for unique IDs
                 const globalIndex = startIndex + index;
                 const sourceName = hadith.kitab ? kitabs_list[hadith.kitab] || hadith.kitab : (state.selectedKitab ? kitabs_list[state.selectedKitab] : 'Unknown');
                 
@@ -431,19 +475,16 @@
 
             if (totalPages <= 1) return;
 
-            // Prev Button
             if (state.page > 1) {
                 const prevBtn = createPageBtn(state.page - 1, "Prev");
                 container.appendChild(prevBtn);
             }
 
-            // Page Indicator
             const span = document.createElement('span');
             span.className = "px-6 py-2 text-primary font-bold";
             span.textContent = `Halaman ${state.page}`;
             container.appendChild(span);
 
-            // Next Button
             if (state.page < totalPages) {
                 const nextBtn = createPageBtn(state.page + 1, "Next");
                 container.appendChild(nextBtn);
@@ -515,7 +556,6 @@
                 const allDataArrays = await Promise.all(promises);
                 let combinedData = [];
                 
-                // Gabungkan semua array data
                 allDataArrays.forEach(arr => {
                     combinedData = [...combinedData, ...arr];
                 });
@@ -533,9 +573,18 @@
 
         // --- EVENT LISTENERS & GLOBAL FUNCTIONS ---
 
-        // Copy Function
         window.copyText = function(elementId) {
             const text = document.getElementById(elementId).innerText;
+            if (!navigator.clipboard) {
+                // Fallback sederhana
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); showToast(); } catch(e){ console.error('Fallback copy failed', e); }
+                document.body.removeChild(ta);
+                return;
+            }
             navigator.clipboard.writeText(text).then(() => {
                 showToast();
             }).catch(err => {
@@ -543,7 +592,6 @@
             });
         }
 
-        // Toast Function
         function showToast() {
             const toast = document.getElementById('toast');
             toast.classList.remove('translate-y-20', 'opacity-0');
@@ -552,17 +600,13 @@
             }, 3000);
         }
 
-        // Parallax Effect
         document.addEventListener('mousemove', (e) => {
             const moveX = (e.clientX * -0.01);
-            const moveY = (e.clientY * -0.01);
             const ambient1 = document.querySelector('.bg-ambient-1');
-            if(ambient1) ambient1.style.transform = `translate(${moveX}px, ${moveY}px) scale(1)`;
+            if(ambient1) ambient1.style.transform = `translate(${moveX}px, 0px) scale(1)`;
         });
 
-        // Jalankan saat load
         document.addEventListener('DOMContentLoaded', init);
-
     </script>
 </body>
-  </html>
+</html>
