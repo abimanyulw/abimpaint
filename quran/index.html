@@ -26,11 +26,11 @@
                         secondary: '#ff4d80',  
                         accent: '#ff99aa',
                         success: '#00ff9d',
-                        'tajweed-nun': '#00d4ff',   /* Cyan for Nun/Tanwin */
-                        'tajweed-mim': '#34d399',   /* Green for Mim */
-                        'tajweed-mad': '#fbbf24',   /* Yellow for Mad */
-                        'tajweed-qol': '#f472b6',   /* Pink for Qolqolah */
-                        'tajweed-lam': '#c084fc',   /* Purple for Alif Lam */
+                        'tajweed-nun': '#ff6b6b',   /* Red-Pink for Nun */
+                        'tajweed-mim': '#ff8787',   /* Light Red-Pink for Mim */
+                        'tajweed-mad': '#fca5a5',   /* Pale Pink for Mad */
+                        'tajweed-qol': '#ff4d4d',   /* Strong Pink for Qolqolah */
+                        'tajweed-lam': '#f87171',   /* Medium Pink for Lam */
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -99,7 +99,6 @@
         .word-btn {
             transition: all 0.2s;
             user-select: none;
-            /* Enhance Arabic Look */
             font-family: 'Amiri', serif;
             font-size: 1.75rem; 
             line-height: 2.5rem;
@@ -114,7 +113,7 @@
             text-align: right;
         }
 
-        /* Tajweed Highlight Styles */
+        /* Tajweed Highlight Styles - Updated to Pink Theme */
         .tj-box {
             display: inline-block;
             border-radius: 8px;
@@ -124,12 +123,11 @@
             transition: all 0.3s ease;
         }
         
-        /* Specific Colors */
-        .tj-nun { border-color: #00d4ff; background-color: rgba(0, 212, 255, 0.15); color: #e0f7fa; }
-        .tj-mim { border-color: #34d399; background-color: rgba(52, 211, 153, 0.15); color: #d1fae5; }
-        .tj-mad { border-color: #fbbf24; background-color: rgba(251, 191, 36, 0.15); color: #fef3c7; }
-        .tj-qol { border-color: #f472b6; background-color: rgba(244, 114, 182, 0.15); color: #fce7f3; }
-        .tj-lam { border-color: #c084fc; background-color: rgba(192, 132, 252, 0.15); color: #f3e8ff; }
+        .tj-nun { border-color: #ff6b6b; background-color: rgba(255, 107, 107, 0.15); color: #ffe4e6; }
+        .tj-mim { border-color: #ff8787; background-color: rgba(255, 135, 135, 0.15); color: #ffe4e6; }
+        .tj-mad { border-color: #fca5a5; background-color: rgba(252, 165, 165, 0.15); color: #fff1f2; }
+        .tj-qol { border-color: #ff4d4d; background-color: rgba(255, 77, 77, 0.15); color: #ffe4e6; }
+        .tj-lam { border-color: #f87171; background-color: rgba(248, 113, 113, 0.15); color: #ffe4e6; }
         
         /* Loader */
         .loader {
@@ -223,8 +221,9 @@
 
             <!-- STAGE 1: PUZZLE CONTAINER -->
             <div id="stage-puzzle" class="w-full">
-                <div class="glass-panel p-1 rounded-2xl min-h-[180px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area">
-                    <span class="text-gray-600 text-sm italic pointer-events-none rtl-text">Klik kata di bawah untuk menyusun ayat...</span>
+                <!-- Ditambahkan dir="rtl" agar susunan dimulai dari kanan -->
+                <div class="glass-panel p-1 rounded-2xl min-h-[180px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area" dir="rtl">
+                    <span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>
                 </div>
 
                 <div class="glass-panel p-6 rounded-2xl border border-white/5">
@@ -232,7 +231,7 @@
                         <h3 class="text-gray-300 font-medium text-sm">Potongan Ayat (Acak)</h3>
                         <button onclick="resetPuzzle()" class="text-xs text-primary hover:text-white underline"><i class="fa-solid fa-rotate-right mr-1"></i> Reset</button>
                     </div>
-                    <div id="word-bank" class="flex flex-wrap justify-center gap-3 rtl-text">
+                    <div id="word-bank" class="flex flex-wrap justify-center gap-3 rtl-text" dir="rtl">
                         <!-- Buttons injected by JS -->
                     </div>
                 </div>
@@ -286,36 +285,40 @@
                 <!-- Translation & Tafsir -->
                 <div class="p-6 md:p-8">
                     
-                    <!-- SESUAI REQUEST: Kolom translation (index 16) ditampilkan sebagai Tafsir Wajiz -->
+                    <!-- 1. TERJEMAHAN (Dulu: Tafsir Wajiz) -->
                     <div class="mb-6">
                         <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-language text-secondary"></i> Tafsir Wajiz
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-language text-secondary"></i> Terjemahan
                         </h4>
                         <p id="result-translation" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
                     </div>
 
-                    <!-- SESUAI REQUEST: Kolom tafsir_wajiz (index 17) ditampilkan sebagai Tafsir Tahlili -->
+                    <!-- 2. TAFSIR WAJIZ (Dulu: Tafsir Tahlili) -->
                     <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
-                        <h4 class="text-blue-400 font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-book-open-reader"></i> Tafsir Tahlili
+                        <h4 class="text-secondary font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-book-open"></i> Tafsir Wajiz
                         </h4>
-                        <p id="result-tafsir-tahlili" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                        <p id="result-tafsir-wajiz" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
                     </div>
 
-                    <!-- SESUAI REQUEST: Kolom tafsir_tahlili (index 18) ditampilkan sebagai Asbabun Nuzul -->
+                    <!-- 3. TAFSIR TAHLILI (Dulu: Asbabun Nuzul) -->
                     <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
-                        <h4 class="text-orange-400 font-bold mb-2 flex items-center gap-2">
+                        <h4 class="text-accent font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-book-open-reader"></i> Tafsir Tahlili
+                        </h4>
+                        <p id="result-tafsir-tahlili" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
+                    </div>
+
+                    <!-- 4. ASBABUN NUZUL (Dulu: Keterangan Tambahan) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                        <h4 class="text-primary font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
                             <i class="fa-solid fa-circle-info"></i> Asbabun Nuzul
                         </h4>
                         <p id="result-tafsir-nuzul" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
-                    </div>
-
-                    <!-- Kolom tafsir_sabab_nuzul (index 19) jika ada -->
-                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
-                        <h4 class="text-purple-400 font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-scroll"></i> Keterangan Tambahan
-                        </h4>
-                        <p id="result-tafsir-extra" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
                     </div>
 
                 </div>
@@ -374,7 +377,7 @@
         const hurufIdghamBighunnah = ['ي','ن','م','و'];
         const hurufIdghamBilaghunnah = ['ل','ر'];
         const hurufIqlab = ['ب'];
-        const hurufIkhfa = ['ت','ث','ج','د','ذ','ز','س','ش','ص','ض','ط','ظ','ف','ق','ك']; // 15 huruf
+        const hurufIkhfa = ['ت','ث','ج','د','ذ','ز','س','ش','ص','ض','ط','ظ','ف','ق','ك']; 
 
         const hurufSyamsiyah = ['ت','ث','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ل','ن'];
         const hurufQamariyah = ['ا','ب','ج','ح','خ','ع','غ','ف','ق','ك','م','هـ','و','ي']; 
@@ -423,23 +426,19 @@
             const lines = csvText.trim().split('\n');
             for(let i=1; i<lines.length; i++) {
                 const row = parseCSVLine(lines[i]);
-                // PASTIKAN DATA LENGKAP
                 if(row.length < 19) continue; 
 
-                // PEMETAKAN KOLOM YANG SUDAH DIPERBAIKI
                 quranData.push({
                     id: row[0],
                     surah_latin: row[3],
                     surah_translation: row[5],
                     ayah_num: row[9],
-                    // PERBAIKAN INDEKS: Arabic ada di index 14
                     arabic: row[14], 
                     latin: row[15],
-                    // PERBAIKAN INDEKS SESUAI REQUEST
-                    translation: row[16],      // Akan ditampilkan sebagai Tafsir Wajiz
-                    tafsir_wajiz: row[17],     // Akan ditampilkan sebagai Tafsir Tahlili
-                    tafsir_tahlili: row[18],   // Akan ditampilkan sebagai Asbabun Nuzul
-                    tafsir_sabab_nuzul: row[19] // Tambahan
+                    translation: row[16],      // Digunakan untuk Terjemahan
+                    tafsir_wajiz: row[17],     // Digunakan untuk Tafsir Wajiz
+                    tafsir_tahlili: row[18],   // Digunakan untuk Tafsir Tahlili
+                    tafsir_sabab_nuzul: row[19] // Digunakan untuk Asbabun Nuzul
                 });
             }
         }
@@ -490,14 +489,13 @@
             score = 0;
         }
 
-        // --- STAGE 1: PUZZLE LOGIC (MENGAMBIL DARI KOLOM ARABIC YANG BENAR) ---
+        // --- STAGE 1: PUZZLE LOGIC ---
 
         function initPuzzle() {
             document.getElementById('stage-puzzle').classList.remove('hidden');
             document.getElementById('stage-tajweed').classList.add('hidden');
             document.getElementById('btn-check-puzzle').disabled = true;
 
-            // SEKARANG PASTI MENGAMBIL row[14] (Arabic)
             puzzleState.words = currentAyah.arabic.trim().split(' ');
             puzzleState.current = [];
             puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
@@ -521,7 +519,7 @@
             });
 
             if(puzzleState.current.length === 0) {
-                 puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none rtl-text">Klik kata di bawah untuk menyusun ayat...</span>';
+                 puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>';
             } else {
                 puzzleState.current.forEach((word, index) => {
                     const btn = document.createElement('button');
@@ -815,18 +813,11 @@
             document.getElementById('result-arabic').innerText = currentAyah.arabic;
             document.getElementById('result-latin').innerText = currentAyah.latin;
             
-            // SESUAI REQUEST:
-            // row[16] (translation) -> Label Tafsir Wajiz
-            document.getElementById('result-translation').innerText = currentAyah.translation; 
-            
-            // row[17] (tafsir_wajiz) -> Label Tafsir Tahlili
-            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_wajiz;
-            
-            // row[18] (tafsir_tahlili) -> Label Asbabun Nuzul
-            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_tahlili;
-
-            // row[19] -> Label Tambahan
-            document.getElementById('result-tafsir-extra').innerText = currentAyah.tafsir_sabab_nuzul || '-';
+            // Sesuai perbaikan label:
+            document.getElementById('result-translation').innerText = currentAyah.translation; // Terjemahan
+            document.getElementById('result-tafsir-wajiz').innerText = currentAyah.tafsir_wajiz; // Tafsir Wajiz
+            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_tahlili; // Tafsir Tahlili
+            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_sabab_nuzul; // Asbabun Nuzul
 
             document.getElementById('score-display').innerText = score;
         }
