@@ -12,7 +12,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <!-- Google Fonts (Inter + Amiri for Arabic) -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:italic,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Konfigurasi Tailwind Kustom -->
     <script>
@@ -101,8 +101,8 @@
             user-select: none;
             /* Enhance Arabic Look */
             font-family: 'Amiri', serif;
-            font-size: 1.5rem; /* 24px */
-            line-height: 2.2rem;
+            font-size: 1.75rem; /* Sedikit lebih besar untuk puzzle */
+            line-height: 2.5rem;
         }
         .word-btn:active {
             transform: scale(0.95);
@@ -177,7 +177,7 @@
             </div>
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Tantangan <span class="text-primary">Al-Quran</span></h1>
             <p class="text-gray-400 mb-8 text-lg">
-                Belajar Tajwid Interaktif. Susun ayat, analisa hukum bacaan (Nun, Mim, Mad, Qolqolah), dan pelajari tafsirnya.
+                Belajar Tajwid Interaktif. Susun ayat Arab, analisa hukum bacaan, dan pelajari tafsir lengkap.
             </p>
             
             <div class="glass-panel p-6 rounded-2xl border border-white/5 mb-8 text-left">
@@ -224,7 +224,7 @@
             <!-- STAGE 1: PUZZLE CONTAINER -->
             <div id="stage-puzzle" class="w-full">
                 <div class="glass-panel p-1 rounded-2xl min-h-[180px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area">
-                    <span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>
+                    <span class="text-gray-600 text-sm italic pointer-events-none rtl-text">Klik kata di bawah untuk menyusun ayat...</span>
                 </div>
 
                 <div class="glass-panel p-6 rounded-2xl border border-white/5">
@@ -232,7 +232,7 @@
                         <h3 class="text-gray-300 font-medium text-sm">Potongan Ayat (Acak)</h3>
                         <button onclick="resetPuzzle()" class="text-xs text-primary hover:text-white underline"><i class="fa-solid fa-rotate-right mr-1"></i> Reset</button>
                     </div>
-                    <div id="word-bank" class="flex flex-wrap justify-center gap-3">
+                    <div id="word-bank" class="flex flex-wrap justify-center gap-3 rtl-text">
                         <!-- Buttons injected by JS -->
                     </div>
                 </div>
@@ -292,11 +292,28 @@
                         <p id="result-translation" class="text-gray-300 leading-relaxed text-sm md:text-base"></p>
                     </div>
                     
-                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                    <!-- Tafsir Wajiz -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
                         <h4 class="text-primary font-bold mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-book-open"></i> Tafsir Wajiz
                         </h4>
                         <p id="result-tafsir" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                    </div>
+
+                    <!-- Tafsir Tahlili (BARU) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
+                        <h4 class="text-blue-400 font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open-reader"></i> Tafsir Tahlili
+                        </h4>
+                        <p id="result-tafsir-tahlili" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                    </div>
+
+                    <!-- Tafsir Sabab Nuzul (BARU) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                        <h4 class="text-orange-400 font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info"></i> Asbabun Nuzul
+                        </h4>
+                        <p id="result-tafsir-nuzul" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
                     </div>
                 </div>
 
@@ -404,6 +421,7 @@
             const lines = csvText.trim().split('\n');
             for(let i=1; i<lines.length; i++) {
                 const row = parseCSVLine(lines[i]);
+                // Pastikan data lengkap
                 if(row.length < 19) continue; 
 
                 quranData.push({
@@ -414,7 +432,10 @@
                     arabic: row[15],
                     latin: row[16],
                     translation: row[17],
-                    tafsir_wajiz: row[18]
+                    tafsir_wajiz: row[18] || '-',
+                    // TAMBAHAN TAFSIR BARU
+                    tafsir_tahlili: row[19] || '-',
+                    tafsir_sabab_nuzul: row[20] || '-'
                 });
             }
         }
@@ -465,13 +486,14 @@
             score = 0;
         }
 
-        // --- STAGE 1: PUZZLE LOGIC ---
+        // --- STAGE 1: PUZZLE LOGIC (UPDATED TO ARABIC) ---
 
         function initPuzzle() {
             document.getElementById('stage-puzzle').classList.remove('hidden');
             document.getElementById('stage-tajweed').classList.add('hidden');
             document.getElementById('btn-check-puzzle').disabled = true;
 
+            // PERUBAHAN: Menggunakan arabic bukan latin
             puzzleState.words = currentAyah.arabic.trim().split(' ');
             puzzleState.current = [];
             puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
@@ -496,7 +518,8 @@
             });
 
             if(puzzleState.current.length === 0) {
-                 puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>';
+                 // PERUBAHAN: Teks placeholder juga pakai class rtl
+                 puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none rtl-text">Klik kata di bawah untuk menyusun ayat...</span>';
             } else {
                 puzzleState.current.forEach((word, index) => {
                     const btn = document.createElement('button');
@@ -554,7 +577,7 @@
             }
         }
 
-        // --- STAGE 2: TAJWID ALGORITHM (UPDATED) ---
+        // --- STAGE 2: TAJWID ALGORITHM (UNCHANGED) ---
 
         function initTajweedStage() {
             document.getElementById('stage-puzzle').classList.add('hidden');
@@ -658,7 +681,6 @@
                     });
                 }
                 // Mad Wajib Muttashil (Hamzah dalam satu kata setelah Mad)
-                // Simplified: If we have a Mad letter, check upcoming chars in same word for Hamzah
                 else if ([ALIF, WAW, YA].includes(char)) {
                     // Look ahead for Hamzah before next space
                     let foundHamzah = false;
@@ -676,10 +698,8 @@
                         });
                     }
                 }
-                // Mad Jaiz Munfashil (Mad + Space + Hamzah) - Hard to detect simply without strict parsing
                 // Mad Lin (Ya/Waw berharakat fathah, lalu mati/sukun di akhir kata/waqaf)
                 else if ((char === YA || char === WAW) && i > 0 && text[i-1] === '\u064E') { // Preceded by Fathah
-                    // Check if it's at end of word (space or end of string)
                     const after = i < len - 1 ? text[i+1] : null;
                     if (after === SPACE || after === null || after === SUKUN) {
                         detected.push({
@@ -691,13 +711,11 @@
                 // 4. HUKUM QALQALAH
                 else if (hurufQolqalah.includes(char)) {
                     const after = i < len - 1 ? text[i+1] : null;
-                    // Qalqalah Kubra (End of string/Waqaf)
                     if (after === null || after === SPACE) {
                         detected.push({
                             start: i, end: i, label: "Qalqalah Kubra", colorClass: 'tj-qol'
                         });
                     } 
-                    // Qalqalah Sugra (Natural Sukun)
                     else if (after === SUKUN) {
                         detected.push({
                             start: i, end: i+1, label: "Qalqalah Sugra", colorClass: 'tj-qol'
@@ -791,7 +809,7 @@
             }
         }
 
-        // --- RESULT SCREEN ---
+        // --- RESULT SCREEN (UPDATED) ---
 
         function showResult() {
             document.getElementById('game-screen').classList.add('hidden');
@@ -802,7 +820,14 @@
             document.getElementById('result-arabic').innerText = currentAyah.arabic;
             document.getElementById('result-latin').innerText = currentAyah.latin;
             document.getElementById('result-translation').innerText = currentAyah.translation;
+            
+            // Isi Tafsir Lama
             document.getElementById('result-tafsir').innerText = currentAyah.tafsir_wajiz;
+            
+            // Isi Tafsir Baru
+            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_tahlili;
+            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_sabab_nuzul;
+
             document.getElementById('score-display').innerText = score;
         }
 
