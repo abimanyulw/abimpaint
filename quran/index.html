@@ -26,6 +26,11 @@
                         secondary: '#ff4d80',  
                         accent: '#ff99aa',
                         success: '#00ff9d',
+                        'tajweed-nun': '#00d4ff',   /* Cyan for Nun/Tanwin */
+                        'tajweed-mim': '#34d399',   /* Green for Mim */
+                        'tajweed-mad': '#fbbf24',   /* Yellow for Mad */
+                        'tajweed-qol': '#f472b6',   /* Pink for Qolqolah */
+                        'tajweed-lam': '#c084fc',   /* Purple for Alif Lam */
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -35,6 +40,7 @@
                         'glow': '0 0 20px rgba(255, 0, 85, 0.3)',
                         'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)',
                         'glow-strong': '0 0 30px rgba(255, 0, 85, 0.5)',
+                        'arabic-glow': '0 0 10px rgba(255,255,255,0.2)',
                     },
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -93,21 +99,39 @@
         .word-btn {
             transition: all 0.2s;
             user-select: none;
+            /* Enhance Arabic Look */
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem; /* 24px */
+            line-height: 2.2rem;
         }
         .word-btn:active {
             transform: scale(0.95);
         }
-        
-        /* Tajweed Highlight Colors */
-        .tj-highlight { background-color: rgba(255, 0, 85, 0.3); border-radius: 4px; padding: 0 4px; border: 1px solid rgba(255,0,85,0.6); }
 
         /* Arabic Text Direction */
         .rtl-text {
             direction: rtl;
             text-align: right;
         }
+
+        /* Tajweed Highlight Styles */
+        .tj-box {
+            display: inline-block;
+            border-radius: 8px;
+            padding: 0 4px;
+            margin: 0 2px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
         
-        /* Loading Overlay */
+        /* Specific Colors */
+        .tj-nun { border-color: #00d4ff; background-color: rgba(0, 212, 255, 0.15); color: #e0f7fa; }
+        .tj-mim { border-color: #34d399; background-color: rgba(52, 211, 153, 0.15); color: #d1fae5; }
+        .tj-mad { border-color: #fbbf24; background-color: rgba(251, 191, 36, 0.15); color: #fef3c7; }
+        .tj-qol { border-color: #f472b6; background-color: rgba(244, 114, 182, 0.15); color: #fce7f3; }
+        .tj-lam { border-color: #c084fc; background-color: rgba(192, 132, 252, 0.15); color: #f3e8ff; }
+        
+        /* Loader */
         .loader {
             border: 4px solid rgba(255, 255, 255, 0.1);
             border-left-color: #ff0055;
@@ -132,14 +156,13 @@
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.reload()">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center animate-pulse-slow shadow-glow-sm">
-                        <i class="fa-solid fa-quran text-white text-lg"></i>
+                        <i class="fa-solid fa-book-quran text-white text-lg"></i>
                     </div>
                     <div class="flex flex-col leading-none">
                         <span class="font-bold text-lg tracking-wide text-white">QURAN <span class="text-primary">GAME</span></span>
                         <span class="text-[10px] text-gray-400 uppercase tracking-widest">Abimanyu</span>
                     </div>
                 </div>
-                <!-- Tombol kembali dihapus sesuai permintaan -->
             </div>
         </div>
     </nav>
@@ -150,32 +173,23 @@
         <!-- VIEW 1: START SCREEN -->
         <div id="start-screen" class="text-center animate-fade-in max-w-2xl mx-auto">
             <div class="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 flex items-center justify-center mb-6 shadow-glow-sm animate-float">
-                <!-- ICON DIUBAH KE AL-QURAN -->
                 <i class="fa-solid fa-book-quran text-5xl text-primary"></i>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Tantangan <span class="text-primary">Al-Quran</span></h1>
             <p class="text-gray-400 mb-8 text-lg">
-                Uji pemahaman tajwid dan ketelitian Anda dalam menyusun ayat. Data diambil secara real-time dari file database.
+                Belajar Tajwid Interaktif. Susun ayat, analisa hukum bacaan (Nun, Mim, Mad, Qolqolah), dan pelajari tafsirnya.
             </p>
             
             <div class="glass-panel p-6 rounded-2xl border border-white/5 mb-8 text-left">
                 <h3 class="text-white font-bold mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-secondary"></i> Cara Bermain
+                    <i class="fa-solid fa-list-check text-secondary"></i> Fitur Tajwid
                 </h3>
-                <ul class="space-y-3 text-sm text-gray-300">
-                    <li class="flex items-start gap-3">
-                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">1</span>
-                        <span><strong>Menyusun Ayat:</strong> Susun kata-kata yang diacak menjadi ayat yang benar.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">2</span>
-                        <span><strong>Tebak Tajwid:</strong> Identifikasi hukum bacaan (Mad, Qolqolah, Nun Sukun, dll) pada ayat tersebut.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">3</span>
-                        <span><strong>Tafsir:</strong> Baca arti dan tafsir setelah berhasil menyelesaikan tantangan.</span>
-                    </li>
-                </ul>
+                <div class="grid grid-cols-2 gap-4 text-xs text-gray-400">
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tajweed-nun"></div> Nun & Tanwin</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tajweed-mim"></div> Mim Sukun</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tajweed-mad"></div> Hukum Mad</div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tajweed-qol"></div> Qolqalah</div>
+                </div>
             </div>
 
             <!-- Loading State -->
@@ -209,8 +223,7 @@
 
             <!-- STAGE 1: PUZZLE CONTAINER -->
             <div id="stage-puzzle" class="w-full">
-                <div class="glass-panel p-1 rounded-2xl min-h-[200px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area">
-                    <!-- Target Area -->
+                <div class="glass-panel p-1 rounded-2xl min-h-[180px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area">
                     <span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>
                 </div>
 
@@ -235,12 +248,12 @@
             <div id="stage-tajweed" class="hidden w-full">
                 <div class="text-center mb-8">
                     <h2 class="text-2xl font-bold text-white mb-2">Analisa Hukum Tajwid</h2>
-                    <p class="text-gray-400 text-sm">Perhatikan bagian ayat yang <span class="text-primary font-bold">DITANDAI</span>. Apa hukum bacaannya?</p>
+                    <p class="text-gray-400 text-sm">Perhatikan bagian ayat yang <span class="text-white font-bold border-b-2 border-primary">DITANDAI</span>. Apa hukum bacaannya?</p>
                 </div>
 
-                <div class="glass-panel p-8 rounded-2xl border border-white/10 mb-8 flex justify-center items-center min-h-[150px]">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10 mb-8 flex justify-center items-center min-h-[150px] bg-black/40">
                     <!-- Displayed Arabic Text with Highlight -->
-                    <div id="tajweed-display" class="text-3xl md:text-5xl font-arabic font-bold leading-loose rtl-text text-gray-100">
+                    <div id="tajweed-display" class="text-4xl md:text-6xl font-arabic font-bold leading-loose rtl-text text-gray-100 shadow-arabic-glow">
                         <!-- Injected JS -->
                     </div>
                 </div>
@@ -266,7 +279,7 @@
                 <!-- Ayat Display -->
                 <div class="p-8 bg-black/40 border-b border-white/5 text-center">
                     <h3 id="result-surah" class="text-primary text-sm font-bold tracking-widest uppercase mb-4">QS. Al-Fatihah: 1</h3>
-                    <p id="result-arabic" class="font-arabic text-4xl leading-normal text-white mb-6 rtl-text"></p>
+                    <p id="result-arabic" class="font-arabic text-4xl md:text-5xl leading-normal text-white mb-6 rtl-text shadow-arabic-glow"></p>
                     <p id="result-latin" class="text-gray-400 italic text-lg"></p>
                 </div>
 
@@ -321,13 +334,39 @@
         let score = 0;
         let isDataLoaded = false;
 
+        // --- UNICODE CONSTANTS ---
+        const TANWIN_FATHAH = '\u064B'; // ً
+        const TANWIN_DHAMMAH = '\u064C'; // ٌ
+        const TANWIN_KASRAH = '\u064D'; // ٍ
+        const SUKUN = '\u0652'; // ْ
+        const HAMZAH = '\u0621'; // ء
+        const ALIF = '\u0627'; // ا
+        const WAW = '\u0648'; // و
+        const YA = '\u064A'; // ي
+        const LAM = '\u0644'; // ل
+        const MIM = '\u0645'; // م
+        const NUN = '\u0646'; // ن
+        const BA = '\u0628'; // ب
+        const SPACE = ' ';
+
+        // --- TAJWEED DATA SETS ---
+        const hurufIzharHalqi = ['ء','ه','ع','ح','غ','خ'];
+        const hurufIdghamBighunnah = ['ي','ن','م','و'];
+        const hurufIdghamBilaghunnah = ['ل','ر'];
+        const hurufIqlab = ['ب'];
+        const hurufIkhfa = ['ت','ث','ج','د','ذ','ز','س','ش','ص','ض','ط','ظ','ف','ق','ك']; // 15 huruf
+
+        const hurufSyamsiyah = ['ت','ث','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ل','ن'];
+        const hurufQamariyah = ['ا','ب','ج','ح','خ','ع','غ','ف','ق','ك','م','هـ','و','ي']; // Sisa huruf hijaiyah selain syamsiyah
+
+        const hurufQolqalah = ['ق','ط','ب','ج','د'];
+
         // --- INIT & FETCHING ---
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadQuranData();
         });
 
-        // Fungsi untuk Fetch CSV secara asli
         async function loadQuranData() {
             const loadingEl = document.getElementById('loading-indicator');
             const btnStart = document.getElementById('btn-start');
@@ -336,20 +375,16 @@
 
             try {
                 loadingEl.classList.remove('hidden');
-                
-                // FETCH FILE CSV (Pastikan file ini ada di folder yang sama dengan HTML)
                 const response = await fetch('quran.csv');
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const csvText = await response.text();
                 parseCSV(csvText);
                 
-                // UI Update jika sukses
                 isDataLoaded = true;
                 loadingEl.classList.add('hidden');
+                
+                // Enable Button
                 btnStart.disabled = false;
                 btnStart.classList.remove('bg-gray-700', 'text-gray-400', 'cursor-not-allowed');
                 btnStart.classList.add('bg-gradient-to-r', 'from-primary', 'to-secondary', 'text-white', 'shadow-glow', 'hover:shadow-glow-strong', 'hover:scale-105', 'cursor-pointer');
@@ -365,19 +400,10 @@
             }
         }
 
-        // CSV Parser yang lebih robust untuk menangani tanda kutip dan koma
         function parseCSV(csvText) {
             const lines = csvText.trim().split('\n');
-            // Header dilewati (index 0), mulai dari index 1
             for(let i=1; i<lines.length; i++) {
                 const row = parseCSVLine(lines[i]);
-                
-                // Mapping berdasarkan urutan kolom di CSV Anda
-                // 0:id, 1:surah_id, 2:surah_arabic, 3:surah_latin, 4:surah_transliteration, 5:surah_translation
-                // 6:surah_num_ayah, 7:surah_page, 8:surah_location, 9:ayah, 10:page, 11:quarter_hizb, 12:juz, 13:manzil
-                // 14: (colom kosong di sample), 15:arabic, 16:latin, 17:translation, 18:tafsir_wajiz
-                
-                // Amanahkan akses array agar tidak error jika kolom kurang
                 if(row.length < 19) continue; 
 
                 quranData.push({
@@ -393,69 +419,42 @@
             }
         }
 
-        // Helper function untuk memecah baris CSV dengan benar (menangani quotes)
         function parseCSVLine(line) {
             const result = [];
             let startValueIndex = 0;
             let inQuotes = false;
-            
             for (let i = 0; i < line.length; i++) {
                 const char = line[i];
-                const prevChar = i > 0 ? line[i-1] : '';
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                }
-                
+                if (char === '"') inQuotes = !inQuotes;
                 if (char === ',' && !inQuotes) {
                     let val = line.substring(startValueIndex, i);
-                    // Hapus quote pembuka dan penutup jika ada
                     if (val.startsWith('"') && val.endsWith('"')) {
-                        val = val.slice(1, -1);
-                        // Handle double quotes escaped inside string ("")
-                        val = val.replace(/""/g, '"');
+                        val = val.slice(1, -1).replace(/""/g, '"');
                     }
                     result.push(val);
                     startValueIndex = i + 1;
                 }
             }
-            
-            // Ambil sisa string terakhir
             let lastVal = line.substring(startValueIndex);
             if (lastVal.startsWith('"') && lastVal.endsWith('"')) {
-                lastVal = lastVal.slice(1, -1);
-                lastVal = lastVal.replace(/""/g, '"');
+                lastVal = lastVal.slice(1, -1).replace(/""/g, '"');
             }
             result.push(lastVal);
-            
             return result;
         }
 
         // --- GAME FLOW ---
 
         function startGame() {
-            if(!isDataLoaded) {
-                showToast("Data belum siap, tunggu sebentar...", "error");
-                return;
-            }
+            if(!isDataLoaded || quranData.length === 0) return;
 
-            if(quranData.length === 0) {
-                showToast("Data CSV kosong atau format salah.", "error");
-                return;
-            }
-
-            // Pick Random Ayah
             currentAyah = quranData[Math.floor(Math.random() * quranData.length)];
             
-            // Reset UI
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             
-            // Setup Header
             document.getElementById('game-surah-name').innerText = `${currentAyah.surah_latin}: ${currentAyah.ayah_num}`;
-
-            // Start Stage 1
             initPuzzle();
         }
 
@@ -473,12 +472,8 @@
             document.getElementById('stage-tajweed').classList.add('hidden');
             document.getElementById('btn-check-puzzle').disabled = true;
 
-            // Split Arabic text into words
-            // Membersihkan tanda baca aneh jika ada, atau split spasi standar
             puzzleState.words = currentAyah.arabic.trim().split(' ');
             puzzleState.current = [];
-            
-            // Shuffle
             puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
 
             renderPuzzleUI();
@@ -491,29 +486,27 @@
             bankContainer.innerHTML = '';
             puzzleArea.innerHTML = '';
 
-            // Render Word Bank (Shuffled remaining)
             puzzleState.shuffled.forEach((word, index) => {
                 const btn = document.createElement('button');
-                btn.className = "word-btn px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-arabic text-xl hover:border-primary hover:bg-primary/20 transition-all";
+                // Style improvements for Arabic buttons
+                btn.className = "word-btn px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:border-primary hover:bg-primary/20 hover:shadow-glow-sm transition-all";
                 btn.innerText = word;
                 btn.onclick = () => selectWord(word, index);
                 bankContainer.appendChild(btn);
             });
 
-            // Render Puzzle Area (Selected)
             if(puzzleState.current.length === 0) {
                  puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>';
             } else {
                 puzzleState.current.forEach((word, index) => {
                     const btn = document.createElement('button');
-                    btn.className = "word-btn px-4 py-2 rounded-lg bg-primary/20 border border-primary/40 text-white font-arabic text-xl shadow-glow-sm hover:bg-red-900/40 transition-all";
+                    btn.className = "word-btn px-5 py-3 rounded-xl bg-primary/20 border border-primary/50 text-white shadow-glow-sm hover:bg-red-900/40 transition-all";
                     btn.innerText = word;
                     btn.onclick = () => deselectWord(index);
                     puzzleArea.appendChild(btn);
                 });
             }
 
-            // Enable check button if full
             const checkBtn = document.getElementById('btn-check-puzzle');
             if(puzzleState.current.length === puzzleState.words.length) {
                 checkBtn.disabled = false;
@@ -555,88 +548,177 @@
                 initTajweedStage();
             } else {
                 showToast("Masih salah, coba lagi.", "error");
-                // Animation for error
                 const area = document.getElementById('puzzle-area');
                 area.classList.add('animate-bounce-short');
                 setTimeout(() => area.classList.remove('animate-bounce-short'), 500);
             }
         }
 
-        // --- STAGE 2: TAJWID ALGORITHM ---
+        // --- STAGE 2: TAJWID ALGORITHM (UPDATED) ---
 
         function initTajweedStage() {
             document.getElementById('stage-puzzle').classList.add('hidden');
             document.getElementById('stage-tajweed').classList.remove('hidden');
 
-            // 1. Analyze Text
             const text = currentAyah.arabic;
             const rules = analyzeTajweed(text);
 
-            // 2. Pick a rule to quiz
             if(rules.length === 0) {
-                tajweedState.targetRule = { type: 'Umum', label: 'Bacaan Umum', start: 0, end: 1 }; 
+                tajweedState.targetRule = { type: 'Umum', label: 'Bacaan Umum', start: 0, end: 1, colorClass: 'border-gray-500 bg-gray-500/10' }; 
             } else {
                 tajweedState.targetRule = rules[Math.floor(Math.random() * rules.length)];
             }
 
-            // 3. Render Text with Highlight
             renderTajweedText(text, tajweedState.targetRule);
-
-            // 4. Generate Options
             generateTajweedOptions(tajweedState.targetRule.label);
         }
 
         function analyzeTajweed(text) {
             const detected = [];
-            
-            // Regex Definitions
-            // 1. Mad Thabii (Harokat berlawanan + Huruf Mad)
-            const madPattern = /([َ ا]|[ُ و]|[ِ ي])/g;
-            let match;
-            while ((match = madPattern.exec(text)) !== null) {
-                detected.push({ type: 'Mad', label: 'Mad Thabii', start: match.index, end: match.index + 1 });
-            }
+            const len = text.length;
 
-            // 2. Qolqolah (ب ج د ط ق) dengan sukun atau waqaf
-            const qolqolahLetters = ['بْ', 'جْ', 'دْ', 'طْ', 'قْ'];
-            qolqolahLetters.forEach(letter => {
-                let start = text.indexOf(letter);
-                while(start !== -1) {
-                    detected.push({ type: 'Qolqolah', label: 'Qolqolah', start: start, end: start + 1 });
-                    start = text.indexOf(letter, start + 1);
+            for (let i = 0; i < len; i++) {
+                const char = text[i];
+                const nextChar = i < len - 1 ? text[i+1] : null;
+                
+                // 1. HUKUM NUN SUKUN & TANWIN
+                // A. NUN SUKUN (نْ)
+                if (char === NUN && nextChar === SUKUN) {
+                    const target = i < len - 2 ? text[i+2] : null;
+                    if (target) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-nun' };
+                        if (hurufIzharHalqi.includes(target)) {
+                            rule.label = "Izhar Halqi";
+                        } else if (hurufIdghamBighunnah.includes(target)) {
+                            rule.label = "Idgham Bighunnah";
+                            rule.end = i+2; // Include target
+                        } else if (hurufIdghamBilaghunnah.includes(target)) {
+                            rule.label = "Idgham Bilaghunnah";
+                            rule.end = i+2;
+                        } else if (hurufIqlab.includes(target)) {
+                            rule.label = "Iqlab";
+                            rule.end = i+2;
+                        } else {
+                            rule.label = "Ikhfa Haqiqi";
+                            rule.end = i+2;
+                        }
+                        detected.push(rule);
+                    }
                 }
-            });
+                
+                // B. TANWIN (ً ٍ ٌ) - Checks if Tanwin is present on char, looks at NEXT char
+                else if ([TANWIN_FATHAH, TANWIN_DHAMMAH, TANWIN_KASRAH].includes(char)) {
+                    const target = nextChar;
+                    if (target && target !== SPACE) {
+                        let rule = { start: i-1, end: i, colorClass: 'tj-nun' }; // Highlight the letter + tanwin
+                        // Adjust start to include the base letter if i>0
+                        if(i > 0) rule.start = i-1;
 
-            // 3. Alif Lam (ال)
-            const alifLamIndex = text.indexOf('ال');
-            if(alifLamIndex !== -1) {
-                const nextChar = text[alifLamIndex + 2];
-                const shamsi = ['ت', 'ث', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ل', 'ن'];
-                if(shamsi.includes(nextChar)) {
-                    detected.push({ type: 'Lam', label: 'Idgham Syamsiyyah', start: alifLamIndex, end: alifLamIndex + 2 });
-                } else {
-                    detected.push({ type: 'Lam', label: 'Alif Lam Qamariyyah', start: alifLamIndex, end: alifLamIndex + 2 });
+                        if (hurufIzharHalqi.includes(target)) {
+                            rule.label = "Izhar Halqi (Tanwin)";
+                        } else if (hurufIdghamBighunnah.includes(target)) {
+                            rule.label = "Idgham Bighunnah (Tanwin)";
+                        } else if (hurufIdghamBilaghunnah.includes(target)) {
+                            rule.label = "Idgham Bilaghunnah (Tanwin)";
+                        } else if (hurufIqlab.includes(target)) {
+                            rule.label = "Iqlab (Tanwin)";
+                        } else {
+                            rule.label = "Ikhfa Haqiqi (Tanwin)";
+                        }
+                        detected.push(rule);
+                    }
+                }
+
+                // 2. HUKUM MIM SUKUN
+                else if (char === MIM && nextChar === SUKUN) {
+                    const target = i < len - 2 ? text[i+2] : null;
+                    if (target) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-mim' };
+                        if (target === BA) {
+                            rule.label = "Ikhfa Syafawi";
+                            rule.end = i+2;
+                        } else if (target === MIM) {
+                            rule.label = "Idgham Mimi (Mitslain)";
+                            rule.end = i+2;
+                        } else {
+                            rule.label = "Izhar Syafawi";
+                        }
+                        detected.push(rule);
+                    }
+                }
+
+                // 3. HUKUM MAD
+                // Mad Thabi'i (harakat + huruf mad biasa)
+                else if (nextChar && 
+                        ((char === '\u064E' && nextChar === ALIF) || // Fathah + Alif
+                         (char === '\u064F' && nextChar === WAW) ||   // Dhammah + Waw
+                         (char === '\u0650' && nextChar === YA))) {   // Kasrah + Ya
+                    detected.push({
+                        start: i, end: i+1, label: "Mad Thabi'i", colorClass: 'tj-mad'
+                    });
+                }
+                // Mad Wajib Muttashil (Hamzah dalam satu kata setelah Mad)
+                // Simplified: If we have a Mad letter, check upcoming chars in same word for Hamzah
+                else if ([ALIF, WAW, YA].includes(char)) {
+                    // Look ahead for Hamzah before next space
+                    let foundHamzah = false;
+                    let hamzahIndex = -1;
+                    for(let j=i+1; j < len && text[j] !== SPACE; j++) {
+                        if(text[j] === HAMZAH) {
+                            foundHamzah = true;
+                            hamzahIndex = j;
+                            break;
+                        }
+                    }
+                    if(foundHamzah) {
+                        detected.push({
+                            start: i, end: i, label: "Mad Wajib Muttashil", colorClass: 'tj-mad'
+                        });
+                    }
+                }
+                // Mad Jaiz Munfashil (Mad + Space + Hamzah) - Hard to detect simply without strict parsing
+                // Mad Lin (Ya/Waw berharakat fathah, lalu mati/sukun di akhir kata/waqaf)
+                else if ((char === YA || char === WAW) && i > 0 && text[i-1] === '\u064E') { // Preceded by Fathah
+                    // Check if it's at end of word (space or end of string)
+                    const after = i < len - 1 ? text[i+1] : null;
+                    if (after === SPACE || after === null || after === SUKUN) {
+                        detected.push({
+                            start: i, end: i, label: "Mad Lin (Jika Waqaf)", colorClass: 'tj-mad'
+                        });
+                    }
+                }
+
+                // 4. HUKUM QALQALAH
+                else if (hurufQolqalah.includes(char)) {
+                    const after = i < len - 1 ? text[i+1] : null;
+                    // Qalqalah Kubra (End of string/Waqaf)
+                    if (after === null || after === SPACE) {
+                        detected.push({
+                            start: i, end: i, label: "Qalqalah Kubra", colorClass: 'tj-qol'
+                        });
+                    } 
+                    // Qalqalah Sugra (Natural Sukun)
+                    else if (after === SUKUN) {
+                        detected.push({
+                            start: i, end: i+1, label: "Qalqalah Sugra", colorClass: 'tj-qol'
+                        });
+                    }
+                }
+
+                // 5. HUKUM ALIF LAM
+                else if (char === ALIF && nextChar === LAM) {
+                    const afterLam = i < len - 2 ? text[i+2] : null;
+                    if (afterLam) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-lam' };
+                        if (hurufSyamsiyah.includes(afterLam)) {
+                            rule.label = "Alif Lam Syamsiyah";
+                        } else if (hurufQamariyah.includes(afterLam)) {
+                            rule.label = "Alif Lam Qamariyah";
+                        }
+                        detected.push(rule);
+                    }
                 }
             }
-
-            // 4. Nun Sukun / Tanwin
-            if(text.includes('نْ') || text.includes('نٍ') || text.includes('نً')) {
-                let idx = text.indexOf('ن');
-                while(idx !== -1) {
-                     detected.push({ type: 'Nun', label: 'Nun Sukun/Tanwin', start: idx, end: idx + 1 });
-                     idx = text.indexOf('ن', idx + 1);
-                }
-            }
-            
-            // 5. Mim Sukun
-            if(text.includes('مْ')) {
-                 let idx = text.indexOf('م');
-                while(idx !== -1) {
-                     detected.push({ type: 'Mim', label: 'Mim Sukun', start: idx, end: idx + 1 });
-                     idx = text.indexOf('م', idx + 1);
-                }
-            }
-
             return detected;
         }
 
@@ -652,7 +734,7 @@
             spanBefore.innerText = before;
             
             const spanHighlight = document.createElement('span');
-            spanHighlight.className = 'tj-highlight text-primary font-bold scale-110 inline-block transition-all';
+            spanHighlight.className = `tj-box ${target.colorClass} font-bold scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]`;
             spanHighlight.innerText = targetPart;
 
             const spanAfter = document.createElement('span');
@@ -666,8 +748,10 @@
             container.innerHTML = '';
 
             const allLabels = [
-                'Mad Thabii', 'Qolqolah', 'Idgham Syamsiyyah', 
-                'Alif Lam Qamariyyah', 'Nun Sukun/Tanwin', 'Mim Sukun', 'Ikhfa Haqiqi'
+                'Izhar Halqi', 'Idgham Bighunnah', 'Idgham Bilaghunnah', 
+                'Iqlab', 'Ikhfa Haqiqi', 'Ikhfa Syafawi', 'Idgham Mimi (Mitslain)',
+                'Izhar Syafawi', 'Mad Thabi\'i', 'Mad Wajib Muttashil', 'Mad Lin (Jika Waqaf)',
+                'Qalqalah Sugra', 'Qalqalah Kubra', 'Alif Lam Syamsiyah', 'Alif Lam Qamariyah'
             ];
 
             const wrongOptions = allLabels.filter(l => l !== correctLabel);
@@ -685,7 +769,7 @@
                         <div class="w-6 h-6 rounded-full border border-gray-600 group-hover:border-primary flex items-center justify-center text-xs">
                             <i class="fa-solid fa-check opacity-0 group-hover:opacity-100 text-primary"></i>
                         </div>
-                        <span class="text-gray-300 font-medium group-hover:text-white">${opt}</span>
+                        <span class="text-gray-300 font-medium group-hover:text-white text-sm md:text-base">${opt}</span>
                     </div>
                 `;
                 btn.onclick = () => checkTajweedAnswer(opt, correctLabel, btn);
@@ -714,7 +798,6 @@
             const resultScreen = document.getElementById('result-screen');
             resultScreen.classList.remove('hidden');
 
-            // Populate Data
             document.getElementById('result-surah').innerText = `QS. ${currentAyah.surah_latin}: ${currentAyah.ayah_num} (${currentAyah.surah_translation})`;
             document.getElementById('result-arabic').innerText = currentAyah.arabic;
             document.getElementById('result-latin').innerText = currentAyah.latin;
