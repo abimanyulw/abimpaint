@@ -101,7 +101,7 @@
             user-select: none;
             /* Enhance Arabic Look */
             font-family: 'Amiri', serif;
-            font-size: 1.75rem; /* Sedikit lebih besar untuk puzzle */
+            font-size: 1.75rem; 
             line-height: 2.5rem;
         }
         .word-btn:active {
@@ -285,22 +285,16 @@
 
                 <!-- Translation & Tafsir -->
                 <div class="p-6 md:p-8">
+                    
+                    <!-- SESUAI REQUEST: Kolom translation (index 16) ditampilkan sebagai Tafsir Wajiz -->
                     <div class="mb-6">
                         <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-language text-secondary"></i> Arti Perkata
+                            <i class="fa-solid fa-language text-secondary"></i> Tafsir Wajiz
                         </h4>
-                        <p id="result-translation" class="text-gray-300 leading-relaxed text-sm md:text-base"></p>
-                    </div>
-                    
-                    <!-- Tafsir Wajiz -->
-                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
-                        <h4 class="text-primary font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-book-open"></i> Tafsir Wajiz
-                        </h4>
-                        <p id="result-tafsir" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                        <p id="result-translation" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
                     </div>
 
-                    <!-- Tafsir Tahlili (BARU) -->
+                    <!-- SESUAI REQUEST: Kolom tafsir_wajiz (index 17) ditampilkan sebagai Tafsir Tahlili -->
                     <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
                         <h4 class="text-blue-400 font-bold mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-book-open-reader"></i> Tafsir Tahlili
@@ -308,13 +302,22 @@
                         <p id="result-tafsir-tahlili" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
                     </div>
 
-                    <!-- Tafsir Sabab Nuzul (BARU) -->
-                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                    <!-- SESUAI REQUEST: Kolom tafsir_tahlili (index 18) ditampilkan sebagai Asbabun Nuzul -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
                         <h4 class="text-orange-400 font-bold mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-circle-info"></i> Asbabun Nuzul
                         </h4>
                         <p id="result-tafsir-nuzul" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
                     </div>
+
+                    <!-- Kolom tafsir_sabab_nuzul (index 19) jika ada -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                        <h4 class="text-purple-400 font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-scroll"></i> Keterangan Tambahan
+                        </h4>
+                        <p id="result-tafsir-extra" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
+                    </div>
+
                 </div>
 
                 <!-- Action Footer -->
@@ -374,7 +377,7 @@
         const hurufIkhfa = ['ت','ث','ج','د','ذ','ز','س','ش','ص','ض','ط','ظ','ف','ق','ك']; // 15 huruf
 
         const hurufSyamsiyah = ['ت','ث','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ل','ن'];
-        const hurufQamariyah = ['ا','ب','ج','ح','خ','ع','غ','ف','ق','ك','م','هـ','و','ي']; // Sisa huruf hijaiyah selain syamsiyah
+        const hurufQamariyah = ['ا','ب','ج','ح','خ','ع','غ','ف','ق','ك','م','هـ','و','ي']; 
 
         const hurufQolqalah = ['ق','ط','ب','ج','د'];
 
@@ -401,7 +404,6 @@
                 isDataLoaded = true;
                 loadingEl.classList.add('hidden');
                 
-                // Enable Button
                 btnStart.disabled = false;
                 btnStart.classList.remove('bg-gray-700', 'text-gray-400', 'cursor-not-allowed');
                 btnStart.classList.add('bg-gradient-to-r', 'from-primary', 'to-secondary', 'text-white', 'shadow-glow', 'hover:shadow-glow-strong', 'hover:scale-105', 'cursor-pointer');
@@ -421,21 +423,23 @@
             const lines = csvText.trim().split('\n');
             for(let i=1; i<lines.length; i++) {
                 const row = parseCSVLine(lines[i]);
-                // Pastikan data lengkap
+                // PASTIKAN DATA LENGKAP
                 if(row.length < 19) continue; 
 
+                // PEMETAKAN KOLOM YANG SUDAH DIPERBAIKI
                 quranData.push({
                     id: row[0],
                     surah_latin: row[3],
                     surah_translation: row[5],
                     ayah_num: row[9],
-                    arabic: row[15],
-                    latin: row[16],
-                    translation: row[17],
-                    tafsir_wajiz: row[18] || '-',
-                    // TAMBAHAN TAFSIR BARU
-                    tafsir_tahlili: row[19] || '-',
-                    tafsir_sabab_nuzul: row[20] || '-'
+                    // PERBAIKAN INDEKS: Arabic ada di index 14
+                    arabic: row[14], 
+                    latin: row[15],
+                    // PERBAIKAN INDEKS SESUAI REQUEST
+                    translation: row[16],      // Akan ditampilkan sebagai Tafsir Wajiz
+                    tafsir_wajiz: row[17],     // Akan ditampilkan sebagai Tafsir Tahlili
+                    tafsir_tahlili: row[18],   // Akan ditampilkan sebagai Asbabun Nuzul
+                    tafsir_sabab_nuzul: row[19] // Tambahan
                 });
             }
         }
@@ -486,14 +490,14 @@
             score = 0;
         }
 
-        // --- STAGE 1: PUZZLE LOGIC (UPDATED TO ARABIC) ---
+        // --- STAGE 1: PUZZLE LOGIC (MENGAMBIL DARI KOLOM ARABIC YANG BENAR) ---
 
         function initPuzzle() {
             document.getElementById('stage-puzzle').classList.remove('hidden');
             document.getElementById('stage-tajweed').classList.add('hidden');
             document.getElementById('btn-check-puzzle').disabled = true;
 
-            // PERUBAHAN: Menggunakan arabic bukan latin
+            // SEKARANG PASTI MENGAMBIL row[14] (Arabic)
             puzzleState.words = currentAyah.arabic.trim().split(' ');
             puzzleState.current = [];
             puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
@@ -510,7 +514,6 @@
 
             puzzleState.shuffled.forEach((word, index) => {
                 const btn = document.createElement('button');
-                // Style improvements for Arabic buttons
                 btn.className = "word-btn px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:border-primary hover:bg-primary/20 hover:shadow-glow-sm transition-all";
                 btn.innerText = word;
                 btn.onclick = () => selectWord(word, index);
@@ -518,7 +521,6 @@
             });
 
             if(puzzleState.current.length === 0) {
-                 // PERUBAHAN: Teks placeholder juga pakai class rtl
                  puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none rtl-text">Klik kata di bawah untuk menyusun ayat...</span>';
             } else {
                 puzzleState.current.forEach((word, index) => {
@@ -577,7 +579,7 @@
             }
         }
 
-        // --- STAGE 2: TAJWID ALGORITHM (UNCHANGED) ---
+        // --- STAGE 2: TAJWID ALGORITHM ---
 
         function initTajweedStage() {
             document.getElementById('stage-puzzle').classList.add('hidden');
@@ -605,7 +607,6 @@
                 const nextChar = i < len - 1 ? text[i+1] : null;
                 
                 // 1. HUKUM NUN SUKUN & TANWIN
-                // A. NUN SUKUN (نْ)
                 if (char === NUN && nextChar === SUKUN) {
                     const target = i < len - 2 ? text[i+2] : null;
                     if (target) {
@@ -614,7 +615,7 @@
                             rule.label = "Izhar Halqi";
                         } else if (hurufIdghamBighunnah.includes(target)) {
                             rule.label = "Idgham Bighunnah";
-                            rule.end = i+2; // Include target
+                            rule.end = i+2; 
                         } else if (hurufIdghamBilaghunnah.includes(target)) {
                             rule.label = "Idgham Bilaghunnah";
                             rule.end = i+2;
@@ -629,12 +630,10 @@
                     }
                 }
                 
-                // B. TANWIN (ً ٍ ٌ) - Checks if Tanwin is present on char, looks at NEXT char
                 else if ([TANWIN_FATHAH, TANWIN_DHAMMAH, TANWIN_KASRAH].includes(char)) {
                     const target = nextChar;
                     if (target && target !== SPACE) {
-                        let rule = { start: i-1, end: i, colorClass: 'tj-nun' }; // Highlight the letter + tanwin
-                        // Adjust start to include the base letter if i>0
+                        let rule = { start: i-1, end: i, colorClass: 'tj-nun' }; 
                         if(i > 0) rule.start = i-1;
 
                         if (hurufIzharHalqi.includes(target)) {
@@ -671,18 +670,15 @@
                 }
 
                 // 3. HUKUM MAD
-                // Mad Thabi'i (harakat + huruf mad biasa)
                 else if (nextChar && 
-                        ((char === '\u064E' && nextChar === ALIF) || // Fathah + Alif
-                         (char === '\u064F' && nextChar === WAW) ||   // Dhammah + Waw
-                         (char === '\u0650' && nextChar === YA))) {   // Kasrah + Ya
+                        ((char === '\u064E' && nextChar === ALIF) || 
+                         (char === '\u064F' && nextChar === WAW) ||   
+                         (char === '\u0650' && nextChar === YA))) {   
                     detected.push({
                         start: i, end: i+1, label: "Mad Thabi'i", colorClass: 'tj-mad'
                     });
                 }
-                // Mad Wajib Muttashil (Hamzah dalam satu kata setelah Mad)
                 else if ([ALIF, WAW, YA].includes(char)) {
-                    // Look ahead for Hamzah before next space
                     let foundHamzah = false;
                     let hamzahIndex = -1;
                     for(let j=i+1; j < len && text[j] !== SPACE; j++) {
@@ -698,8 +694,7 @@
                         });
                     }
                 }
-                // Mad Lin (Ya/Waw berharakat fathah, lalu mati/sukun di akhir kata/waqaf)
-                else if ((char === YA || char === WAW) && i > 0 && text[i-1] === '\u064E') { // Preceded by Fathah
+                else if ((char === YA || char === WAW) && i > 0 && text[i-1] === '\u064E') { 
                     const after = i < len - 1 ? text[i+1] : null;
                     if (after === SPACE || after === null || after === SUKUN) {
                         detected.push({
@@ -809,7 +804,7 @@
             }
         }
 
-        // --- RESULT SCREEN (UPDATED) ---
+        // --- RESULT SCREEN ---
 
         function showResult() {
             document.getElementById('game-screen').classList.add('hidden');
@@ -819,14 +814,19 @@
             document.getElementById('result-surah').innerText = `QS. ${currentAyah.surah_latin}: ${currentAyah.ayah_num} (${currentAyah.surah_translation})`;
             document.getElementById('result-arabic').innerText = currentAyah.arabic;
             document.getElementById('result-latin').innerText = currentAyah.latin;
-            document.getElementById('result-translation').innerText = currentAyah.translation;
             
-            // Isi Tafsir Lama
-            document.getElementById('result-tafsir').innerText = currentAyah.tafsir_wajiz;
+            // SESUAI REQUEST:
+            // row[16] (translation) -> Label Tafsir Wajiz
+            document.getElementById('result-translation').innerText = currentAyah.translation; 
             
-            // Isi Tafsir Baru
-            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_tahlili;
-            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_sabab_nuzul;
+            // row[17] (tafsir_wajiz) -> Label Tafsir Tahlili
+            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_wajiz;
+            
+            // row[18] (tafsir_tahlili) -> Label Asbabun Nuzul
+            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_tahlili;
+
+            // row[19] -> Label Tambahan
+            document.getElementById('result-tafsir-extra').innerText = currentAyah.tafsir_sabab_nuzul || '-';
 
             document.getElementById('score-display').innerText = score;
         }
