@@ -1,1 +1,667 @@
+<<<<<<< HEAD
 <!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/the-gallery/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/the-gallery/logo192.png"/><link rel="manifest" href="/the-gallery/manifest.json"/><meta property="og:url" content="https://deanssmart.github.io/the-gallery/"><meta property="og:type" content="website"><meta property="og:title" content="The Gallery"><meta property="og:image" content="/the-gallery/banner.jpg"><meta property="og:image:alt" content="View of The Gallery"><meta property="og:description" content="Interactive 3D gallery to showcase my art work"><meta property="og:site_name" content="The Gallery"><meta property="og:locale" content="en_US"><meta property="article:author" content="Dean Smart"><title>The Gallery</title><link href="/the-gallery/static/css/main.fb9992e7.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>!function(e){function r(r){for(var n,a,i=r[0],l=r[1],c=r[2],s=0,p=[];s<i.length;s++)a=i[s],Object.prototype.hasOwnProperty.call(o,a)&&o[a]&&p.push(o[a][0]),o[a]=0;for(n in l)Object.prototype.hasOwnProperty.call(l,n)&&(e[n]=l[n]);for(f&&f(r);p.length;)p.shift()();return u.push.apply(u,c||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,i=1;i<t.length;i++){var l=t[i];0!==o[l]&&(n=!1)}n&&(u.splice(r--,1),e=a(a.s=t[0]))}return e}var n={},o={1:0},u=[];function a(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,a),t.l=!0,t.exports}a.e=function(e){var r=[],t=o[e];if(0!==t)if(t)r.push(t[2]);else{var n=new Promise((function(r,n){t=o[e]=[r,n]}));r.push(t[2]=n);var u,i=document.createElement("script");i.charset="utf-8",i.timeout=120,a.nc&&i.setAttribute("nonce",a.nc),i.src=function(e){return a.p+"static/js/"+({}[e]||e)+"."+{3:"e15f3e60",4:"8d111bc4"}[e]+".chunk.js"}(e);var l=new Error;u=function(r){i.onerror=i.onload=null,clearTimeout(c);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),u=r&&r.target&&r.target.src;l.message="Loading chunk "+e+" failed.\n("+n+": "+u+")",l.name="ChunkLoadError",l.type=n,l.request=u,t[1](l)}o[e]=void 0}};var c=setTimeout((function(){u({type:"timeout",target:i})}),12e4);i.onerror=i.onload=u,document.head.appendChild(i)}return Promise.all(r)},a.m=e,a.c=n,a.d=function(e,r,t){a.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},a.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},a.t=function(e,r){if(1&r&&(e=a(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(a.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)a.d(t,n,function(r){return e[r]}.bind(null,n));return t},a.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return a.d(r,"a",r),r},a.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},a.p="/the-gallery/",a.oe=function(e){throw console.error(e),e};var i=this["webpackJsonpthe-gallery"]=this["webpackJsonpthe-gallery"]||[],l=i.push.bind(i);i.push=r,i=i.slice();for(var c=0;c<i.length;c++)r(i[c]);var f=l;t()}([])</script><script src="/the-gallery/static/js/2.c4c40a9e.chunk.js"></script><script src="/the-gallery/static/js/main.dc7a5b34.chunk.js"></script></body></html>
+=======
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Exam Generator & Latihan Soal</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- html2pdf (bundle includes jspdf) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050000',
+                        'dark-card': '#100202',
+                        primary: '#ff0055',
+                        secondary: '#ff4d80',
+                        accent: '#ff99aa',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    boxShadow: { 'glow': '0 0 20px rgba(255, 0, 85, 0.3)', 'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #050000; }
+        ::-webkit-scrollbar-thumb { background: #66001a; border-radius: 4px; }
+        .glass-panel {
+            background: rgba(16,2,2,0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,0,85,0.1);
+        }
+        @keyframes ambient-pulse-slow { 0%,100%{opacity:0.03;transform:scale(1);}50%{opacity:0.06;transform:scale(1.05);} }
+        .bg-ambient-1 { animation: ambient-pulse-slow 12s ease-in-out infinite; }
+        .bg-ambient-2 { animation: ambient-pulse-slow 18s ease-in-out infinite alternate; }
+
+        .pdf-mode * { background:#fff!important; color:#000!important; border-color:#000!important; text-shadow:none!important; box-shadow:none!important; opacity:1!important; }
+        .pdf-mode .question-card { margin-bottom:30px!important; border:1px solid #000!important; page-break-inside:avoid; }
+        .pdf-mode .no-print { display:none!important; }
+        .pdf-mode mjx-container { color:#000!important; }
+
+        .opt-radio:checked + div { border-color: #ff0055; background: rgba(255,0,85,0.1); color: white; }
+        .opt-correct { border-color: #4ade80 !important; background: rgba(74,222,128,0.1) !important; }
+        .opt-wrong { border-color: #f87171 !important; background: rgba(248,113,113,0.1) !important; }
+
+        .loader { border:4px solid rgba(255,0,85,0.1); border-left-color:#ff0055; border-radius:50%; width:24px; height:24px; animation:spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .explanation-box { background: #0b0b0b; border: 1px solid rgba(255,0,85,0.06); padding: 12px; border-radius: 8px; color: #e6e6e6; }
+
+        /* ensure action buttons are clickable above other layers */
+        .action-area { position: relative; z-index: 30; pointer-events: auto; }
+    </style>
+</head>
+<body class="bg-[#050000] text-gray-200 min-h-screen font-sans selection:bg-primary selection:text-white relative">
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050000] via-[#0a0202] to-[#050000]"></div>
+        <div class="absolute top-[-15%] left-[-15%] w-[800px] h-[800px] bg-primary rounded-full mix-blend-screen filter blur-[200px] opacity-[0.03] bg-ambient-1"></div>
+        <div class="absolute bottom-[-15%] right-[-15%] w-[900px] h-[900px] bg-secondary rounded-full mix-blend-screen filter blur-[220px] opacity-[0.03] bg-ambient-2"></div>
+    </div>
+
+    <main class="relative z-10 container mx-auto px-4 py-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent mb-2">Exam Generator & Drilling</h1>
+            <p class="text-gray-500">Yuk, latihan soal dan dapatkan pembahasan AI.</p>
+            
+        </header>
+
+        <section class="glass-panel rounded-2xl p-6 mb-8 shadow-glow">
+            <div class="flex items-center gap-2 mb-6 text-secondary font-semibold">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.532 1.532 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.532 1.532 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                <span>Filter</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase text-gray-400 font-bold">Level</label>
+                    <select id="filterLevel" class="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-primary outline-none">
+                        <option value="">Semua Level</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase text-gray-400 font-bold">Kelas</label>
+                    <select id="filterClass" class="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-primary outline-none">
+                        <option value="">Semua Kelas</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase text-gray-400 font-bold">Mata Pelajaran</label>
+                    <select id="filterSubject" class="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-primary outline-none">
+                        <option value="">Semua Mapel</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase text-gray-400 font-bold">Jumlah Soal</label>
+                    <input type="number" id="inputCount" min="1" max="100" value="5" class="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-primary outline-none">
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 pt-4 border-t border-white/10">
+                <button id="btnGenerate" class="flex-1 bg-primary hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-glow-sm flex items-center justify-center gap-2">
+                    Generate Latihan
+                </button>
+                <button id="btnExamMode" class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2">
+                    Buat Soal (PDF)
+                </button>
+            </div>
+
+            <div id="statusMsg" class="text-center text-xs text-gray-500 mt-2 h-4 flex justify-center items-center gap-2"></div>
+        </section>
+
+        <section id="resultContainer" class="min-h-[300px]">
+            <div class="glass-panel rounded-2xl p-8 text-center text-gray-500 border-dashed border-2 border-white/5">
+                <p>Menunggu data...</p>
+                <p class="text-xs mt-2 text-red-400 hidden" id="corsError">Error: Browser memblokir akses file lokal. Gunakan Live Server.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ---------- CONFIG ----------
+        const HF_TOKEN = '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';
+        const HF_MODEL = 'google/gemma-3-27b-it:featherless-ai';
+        // ----------------------------
+
+        const state = { allQuestions: [], loading: false, keys: { subject: '', kelas: '', level: '' } };
+        const getEl = id => document.getElementById(id);
+
+        const escapeHtml = s => s ? s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') : '';
+
+        function textToHtmlKeepMath(raw = '') {
+            if (!raw) return '';
+            const parts = raw.split('$$');
+            return parts.map((part, idx) => {
+                if (idx % 2 === 1) return `$$${part}$$`;
+                let esc = escapeHtml(part);
+                esc = esc.replaceAll('\\(','\\(').replaceAll('\\)','\\)');
+                return `<div class="leading-relaxed">${esc.replace(/\n/g, '<br>')}</div>`;
+            }).join('');
+        }
+
+        async function renderMath() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                try { await MathJax.typesetPromise(); } catch (e) { console.warn(e); }
+            }
+        }
+
+        function setStatus(msg, isLoading = false) {
+            const el = getEl('statusMsg');
+            if (el) el.innerHTML = isLoading ? `<div class="loader"></div> <span>${msg}</span>` : msg;
+        }
+
+        function normalizeKelas(val) {
+            if (!val) return '';
+            let s = String(val).trim();
+            if (s.endsWith('.0')) s = s.slice(0,-2);
+            return s;
+        }
+
+        function detectKeys(sampleObj) {
+            const keys = Object.keys(sampleObj || {});
+            state.keys.subject = keys.find(k => k.toLowerCase().includes('subject') || k.toLowerCase().includes('mapel') || k.toLowerCase().includes('mata_pelajaran') || k.toLowerCase().includes('mata pelajaran')) || 'subject';
+            state.keys.kelas = keys.find(k => k.toLowerCase().includes('kelas') || k.toLowerCase().includes('class') || k.toLowerCase().includes('tingkat')) || 'kelas';
+            state.keys.level = keys.find(k => k.toLowerCase().includes('level') || k.toLowerCase().includes('jenjang') || k.toLowerCase().includes('pendidikan')) || 'level';
+
+            const d = getEl('debugInfo');
+            if (d) { d.classList.remove('hidden'); d.innerHTML = `Debug: Subject=${state.keys.subject}, Kelas=${state.keys.kelas}, Level=${state.keys.level}`; }
+        }
+
+        async function fetchQuestionFiles() {
+            setStatus('Memuat JSON...', true);
+            state.loading = true;
+            const candidates = [];
+            const files = ['./stem.json', './indo.json', './social.json'];
+
+            try {
+                const tries = await Promise.allSettled(files.map(f => fetch(f)));
+                let hasCorsError = true;
+                let successCount = 0;
+
+                for (let idx = 0; idx < tries.length; idx++) {
+                    const res = tries[idx];
+                    const filePath = files[idx];
+                    if (res.status === 'fulfilled' && res.value.ok) {
+                        hasCorsError = false;
+                        try {
+                            const j = await res.value.json();
+                            const data = Array.isArray(j) ? j : (j.data || []);
+                            if (data.length > 0) {
+                                const sourceName = filePath.split('/').pop();
+                                if (!state.keys.subject) detectKeys(data[0]);
+                                const enriched = data.map(item => ({
+                                    ...item,
+                                    _sourceFile: sourceName,
+                                    _normalizedKelas: normalizeKelas(item[state.keys.kelas] || item['kelas'] || item['class']),
+                                    _normalizedSubject: (item[state.keys.subject] || item['subject'] || '').toString().trim()
+                                })).filter(x => !x.is_for_fewshot || Number(x.is_for_fewshot) === 0);
+                                candidates.push(...enriched);
+                                successCount++;
+                            }
+                        } catch (e) {
+                            console.warn('Parse error', filePath, e);
+                        }
+                    }
+                }
+
+                if (hasCorsError && successCount === 0) {
+                    document.getElementById('corsError').classList.remove('hidden');
+                    setStatus('Gagal memuat file (CORS).');
+                } else {
+                    document.getElementById('corsError').classList.add('hidden');
+                    state.allQuestions = candidates;
+                    if (candidates.length > 0 && !state.keys.subject) detectKeys(candidates[0]);
+                    populateFiltersDynamically();
+                    state.loading = false;
+                    setStatus(`Berhasil memuat ${candidates.length} soal.`);
+                }
+            } catch (err) {
+                console.error(err);
+                state.loading = false;
+                setStatus('Error sistem.');
+            }
+        }
+
+        function populateFiltersDynamically() {
+            const levels = new Set();
+            const kelasSet = new Set();
+            const subjects = new Set();
+
+            state.allQuestions.forEach(q => {
+                const subVal = q[state.keys.subject];
+                const kelVal = q[state.keys.kelas];
+                const levVal = q[state.keys.level];
+
+                if (levVal) levels.add(String(levVal).trim());
+                if (q._normalizedKelas) kelasSet.add(q._normalizedKelas);
+                if (q._normalizedSubject) subjects.add(q._normalizedSubject);
+            });
+
+            const naturalSort = (a,b) => {
+                const na = parseFloat(a), nb = parseFloat(b);
+                if(!isNaN(na) && !isNaN(nb)) return na - nb;
+                return a.localeCompare(b);
+            };
+
+            const levelSel = getEl('filterLevel'); levelSel.innerHTML = '<option value="">Semua Level</option>';
+            Array.from(levels).sort(naturalSort).forEach(l => { const opt = document.createElement('option'); opt.value = l; opt.textContent = l; levelSel.appendChild(opt); });
+
+            const kelasSel = getEl('filterClass'); kelasSel.innerHTML = '<option value="">Semua Kelas</option>';
+            Array.from(kelasSet).sort(naturalSort).forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = "Kelas " + k; kelasSel.appendChild(opt); });
+
+            const subSel = getEl('filterSubject'); subSel.innerHTML = '<option value="">Semua Mapel</option>';
+            Array.from(subjects).sort((a,b)=>a.localeCompare(b)).forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; subSel.appendChild(opt); });
+        }
+
+        function getFilteredQuestions() {
+            const level = getEl('filterLevel').value;
+            const kelas = getEl('filterClass').value;
+            const subject = getEl('filterSubject').value;
+            const count = parseInt(getEl('inputCount').value) || 5;
+
+            let pool = state.allQuestions.filter(q => {
+                let match = true;
+                const qLevel = String(q[state.keys.level] || '').trim();
+                const qSub = String(q[state.keys.subject] || '').trim();
+                const qKel = q._normalizedKelas;
+
+                if (level && qLevel !== level) match = false;
+                if (kelas && qKel !== kelas) match = false;
+                if (subject && qSub !== subject) match = false;
+                return match;
+            });
+
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool.slice(0, count);
+        }
+
+        // PRACTICE: render but make the check button created programmatically and use closure
+        function renderPracticeMode(questions) {
+            const container = getEl('resultContainer'); container.innerHTML = '';
+            if (questions.length === 0) {
+                container.innerHTML = `<div class="glass-panel p-8 text-center text-red-400">Tidak ada soal yang cocok. Cek Key Detect di atas.</div>`;
+                return;
+            }
+
+            const wrapper = document.createElement('div'); wrapper.className = "space-y-6";
+
+            questions.forEach((q, idx) => {
+                const qId = q.id || q._id || idx;
+                const card = document.createElement('div');
+                card.className = "glass-panel p-6 rounded-xl border-l-4 border-l-primary relative";
+
+                let optionsList = [];
+                if (q.jawaban) {
+                    const cleanJawaban = q.jawaban.replace(/\r\n/g, '\n');
+                    const regex = /\n(?=[A-Z]\.)/;
+                    optionsList = cleanJawaban.split(regex).map(s => s.trim());
+                } else if (Array.isArray(q.opsi)) {
+                    optionsList = q.opsi;
+                }
+
+                let optsHtml = '';
+                optionsList.forEach((opt, i) => {
+                    const letter = String.fromCharCode(65 + i);
+                    const cleanText = opt.replace(/^[A-Z]\.\s*/, '');
+                    optsHtml += `
+                        <label class="block cursor-pointer group">
+                            <input type="radio" name="q_${qId}" value="${letter}" class="opt-radio hidden">
+                            <div class="p-3 rounded-lg border border-white/10 bg-black/20 text-gray-300 group-hover:border-primary/50 transition-all flex items-start gap-3">
+                                <span class="font-bold text-primary mt-0.5">${letter}.</span>
+                                <div class="text-sm leading-relaxed">${textToHtmlKeepMath(cleanText)}</div>
+                            </div>
+                        </label>
+                    `;
+                });
+
+                const ketSumber = q['keterangan sumber'] || '';
+                const sumberText = q.sumber ? `${escapeHtml(q.sumber)} ${ketSumber ? `(${ketSumber})` : ''}` : '';
+                const subName = q[state.keys.subject] || 'Umum';
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded">No. ${idx + 1}</span>
+                        <div class="text-right">
+                             <div class="text-[10px] text-gray-500 font-mono">${subName} - Kelas ${q._normalizedKelas || '-'}</div>
+                             <div class="text-[10px] text-gray-600 truncate max-w-[200px]" title="${sumberText}">${escapeHtml(sumberText || '-')}</div>
+                        </div>
+                    </div>
+                    <div class="mb-4 text-white font-medium leading-relaxed">
+                        ${textToHtmlKeepMath(q.soal)}
+                    </div>
+                    <div class="space-y-2">
+                        ${optsHtml}
+                    </div>
+                    <div id="feedback_${qId}" class="mt-3 hidden p-3 rounded text-sm font-bold"></div>
+
+                    <!-- area for explanation -->
+                    <div id="explain_container_${qId}" class="mt-3 hidden">
+                        <div class="explanation-box" id="explain_box_${qId}"></div>
+                    </div>
+                `;
+                wrapper.appendChild(card);
+            });
+
+            // create action area and button programmatically (prevents innerHTML timing issues)
+            const actionDiv = document.createElement('div');
+            actionDiv.className = "mt-8 flex justify-end gap-4 action-area";
+            // button programatik
+            const btnCheck = document.createElement('button');
+            btnCheck.type = 'button';
+            btnCheck.id = 'btnCheck';
+            btnCheck.className = 'bg-primary hover:bg-red-600 text-white font-bold py-3 px-8 rounded-xl shadow-glow';
+            btnCheck.textContent = 'Periksa Jawaban';
+            // ensure clickable above layers
+            btnCheck.style.zIndex = '50';
+            btnCheck.style.pointerEvents = 'auto';
+
+            actionDiv.appendChild(btnCheck);
+            wrapper.appendChild(actionDiv);
+            container.appendChild(wrapper);
+
+            // Event handler uses the same `questions` array (closure) — guarantees checking the shown questions
+            btnCheck.addEventListener('click', async () => {
+                let score = 0;
+                btnCheck.disabled = true;
+                for (let idx = 0; idx < questions.length; idx++) {
+                    const q = questions[idx];
+                    const qId = q.id || q._id || idx;
+                    const selected = document.querySelector(`input[name="q_${qId}"]:checked`);
+                    const feedback = document.getElementById(`feedback_${qId}`);
+                    const correctKey = (q.kunci || '').toUpperCase().trim();
+
+                    if (feedback) {
+                        feedback.classList.remove('hidden');
+                        feedback.innerHTML = '';
+                    }
+                    document.querySelectorAll(`input[name="q_${qId}"]`).forEach(r => r.disabled = true);
+
+                    if (selected) {
+                        const val = selected.value;
+                        const optDivs = document.querySelectorAll(`input[name="q_${qId}"]`);
+                        optDivs.forEach(radio => {
+                            const parentDiv = radio.nextElementSibling;
+                            if (radio.value === correctKey) parentDiv.classList.add('opt-correct');
+                            else if (radio.value === val && val !== correctKey) parentDiv.classList.add('opt-wrong');
+                        });
+                        if (val === correctKey) { score++; if (feedback) feedback.innerHTML = `<span class="text-green-400">Benar!</span>`; }
+                        else { if (feedback) feedback.innerHTML = `<span class="text-red-400">Salah. Kunci: ${correctKey}</span>`; }
+                    } else {
+                        if (feedback) feedback.innerHTML = `<span class="text-gray-400">Tidak dijawab. Kunci: ${correctKey}</span>`;
+                        const correctRadio = document.querySelector(`input[name="q_${qId}"][value="${correctKey}"]`);
+                        if (correctRadio) correctRadio.nextElementSibling.classList.add('opt-correct');
+                    }
+
+                    // explanation button
+                    const explainContainer = document.getElementById(`explain_container_${qId}`);
+                    const explainBox = document.getElementById(`explain_box_${qId}`);
+                    if (explainContainer && explainBox) {
+                        explainContainer.classList.remove('hidden');
+                        if (!explainContainer.querySelector('.explain-btn')) {
+                            const btn = document.createElement('button');
+                            btn.className = 'explain-btn mt-2 bg-white/5 hover:bg-white/10 text-white font-semibold py-2 px-4 rounded';
+                            btn.textContent = 'Tanya AI';
+                            btn.addEventListener('click', async () => {
+                                await handleExplanationClick(q, explainBox, btn);
+                            });
+                            explainContainer.insertBefore(btn, explainBox);
+                        }
+                    }
+                }
+
+                alert(`Skor Akhir: ${score} / ${questions.length}`);
+                btnCheck.disabled = false;
+            });
+
+            renderMath();
+        }
+
+        // explanation handling & HF call (same as before)
+        async function handleExplanationClick(q, explainBox, btn) {
+            try {
+                if (q._explanation) {
+                    explainBox.innerHTML = q._explanationHTML || `<pre style="white-space:pre-wrap;">${escapeHtml(q._explanation)}</pre>`;
+                    return;
+                }
+
+                btn.disabled = true;
+                const loader = document.createElement('span');
+                loader.className = 'loader inline-block ml-3';
+                btn.appendChild(loader);
+
+                const optionsList = [];
+                if (q.jawaban) {
+                    const cleanJawaban = q.jawaban.replace(/\r\n/g, '\n');
+                    const regex = /\n(?=[A-Z]\.)/;
+                    optionsList.push(...cleanJawaban.split(regex).map(s => s.trim()));
+                } else if (Array.isArray(q.opsi)) {
+                    optionsList.push(...q.opsi);
+                }
+
+                let prompt = `Berikan pembahasan lengkap dalam bahasa Indonesia untuk soal berikut. Jelaskan langkah demi langkah dan sebutkan mengapa jawaban yang benar benar, serta singgung opsi lain jika relevan.\n\nSoal:\n${q.soal}\n\nOpsi:\n`;
+                optionsList.forEach((opt, i) => { prompt += `${opt}\n`; });
+                if (q.kunci) prompt += `\nKunci: ${(q.kunci || '').toUpperCase()}\n`;
+                prompt += `\nBuat pembahasan yang jelas dan singkat, maksimal 400 kata.`;
+
+                const explanation = await fetchExplanationFromHF(prompt);
+
+                q._explanation = explanation;
+                q._explanationHTML = `<div class="text-sm leading-relaxed">${escapeHtml(explanation).replace(/\n/g,'<br>')}</div>`;
+                explainBox.innerHTML = q._explanationHTML;
+            } catch (err) {
+                console.error(err);
+                explainBox.innerHTML = `<div class="text-sm text-red-400">Gagal mengambil pembahasan. Cek konsol atau proxy server (CORS).</div>`;
+            } finally {
+                const loaderEl = btn.querySelector('.loader');
+                if (loaderEl) loaderEl.remove();
+                btn.disabled = false;
+            }
+        }
+
+        async function fetchExplanationFromHF(prompt) {
+            const url = 'https://router.huggingface.co/v1/chat/completions';
+            const body = {
+                model: HF_MODEL,
+                messages: [
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'text', text: prompt }
+                        ]
+                    }
+                ],
+                temperature: 0.2,
+                max_tokens: 800
+            };
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${HF_TOKEN}`
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) {
+                const txt = await res.text();
+                throw new Error(`HF API error ${res.status}: ${txt}`);
+            }
+            const json = await res.json();
+
+            try {
+                const choice = json.choices && json.choices[0];
+                if (choice) {
+                    const msg = choice.message || choice;
+                    if (msg.content) {
+                        if (Array.isArray(msg.content)) {
+                            const pieces = msg.content.map(c => (typeof c === 'object' && c.text) ? c.text : (typeof c === 'string' ? c : '')).join(' ');
+                            if (pieces.trim()) return pieces.trim();
+                        } else if (typeof msg.content === 'string') {
+                            return msg.content;
+                        } else if (typeof msg.content === 'object' && msg.content.text) {
+                            return msg.content.text;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Parsing choice failed', e);
+            }
+            return JSON.stringify(json, null, 2);
+        }
+
+        // PDF rendering using jsPDF.html (text-oriented)
+        function renderExamMode(questions) {
+            const container = getEl('resultContainer'); container.innerHTML = '';
+            if (questions.length === 0) {
+                container.innerHTML = `<div class="glass-panel p-8 text-center text-red-400">Tidak ada soal yang cocok.</div>`;
+                return;
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.id = 'examPaper';
+            wrapper.className = 'glass-panel p-8 md:p-12 rounded-xl shadow-2xl relative';
+
+            const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            let html = `
+                <div style="border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:16px;margin-bottom:24px;text-align:center;">
+                    <h1 style="font-size:20px;margin:0 0 6px 0;">SOAL LATIHAN & UJIAN SEKOLAH</h1>
+                    <div style="font-size:12px;color:#666">${dateStr}</div>
+                </div>
+                <div style="margin-bottom:16px;font-size:12px;color:#666;padding:12px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;">
+                    Petunjuk: Pilih jawaban yang paling benar. Nama: ____________________  Kelas: __________
+                </div>
+            `;
+
+            questions.forEach((q, idx) => {
+                let optionsList = [];
+                if (q.jawaban) {
+                    const cleanJawaban = q.jawaban.replace(/\r\n/g, '\n');
+                    const regex = /\n(?=[A-Z]\.)/;
+                    optionsList = cleanJawaban.split(regex).map(s => s.trim());
+                } else if (Array.isArray(q.opsi)) {
+                    optionsList = q.opsi;
+                }
+
+                let optsHtml = optionsList.map((opt, i) => {
+                    const letter = String.fromCharCode(65 + i);
+                    const cleanText = opt.replace(/^[A-Z]\.\s*/, '');
+                    return `<div style="margin-bottom:6px;"><strong>${letter}.</strong> ${escapeHtml(cleanText)}</div>`;
+                }).join('');
+
+                const subName = q[state.keys.subject] || 'Umum';
+                const ketSumber = q['keterangan sumber'] || '';
+                const sumberText = q.sumber ? `${escapeHtml(q.sumber)} ${ketSumber ? `(${ketSumber})` : ''}` : '';
+
+                html += `
+                    <div style="margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.06);">
+                        <div style="display:flex;gap:8px;margin-bottom:8px;">
+                            <div style="min-width:22px;font-weight:bold;color:#ff0055;">${idx + 1}.</div>
+                            <div>${escapeHtml(q.soal)}</div>
+                        </div>
+                        <div style="padding-left:26px;color:#333;font-size:12px;">
+                            ${optsHtml}
+                        </div>
+                        <div style="padding-left:26px;margin-top:6px;font-size:10px;color:#666;font-style:italic;">Mapel: ${escapeHtml(subName)} | Sumber: ${escapeHtml(sumberText || 'Internal')}</div>
+                    </div>
+                `;
+            });
+
+            html += `<div style="margin-top:24px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);"><h3 style="margin:0 0 12px 0;font-size:16px;">KUNCI JAWABAN</h3>`;
+            html += `<div style="display:grid;grid-template-columns: repeat(3, 1fr);gap:8px;font-size:12px;">`;
+            questions.forEach((q, idx) => {
+                html += `<div style="padding:6px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;"><span>No. ${idx+1}</span><strong>${(q.kunci||'?').toUpperCase()}</strong></div>`;
+            });
+            html += `</div></div>`;
+
+            wrapper.innerHTML = html;
+            container.appendChild(wrapper);
+
+            const btnDiv = document.createElement('div');
+            btnDiv.className = 'mt-6 flex justify-center no-print';
+            btnDiv.innerHTML = `<button id="btnDownloadPdf" class="bg-primary hover:bg-red-600 text-white font-bold py-3 px-8 rounded-xl shadow-glow transition-all flex items-center gap-2">Download PDF</button>`;
+            container.appendChild(btnDiv);
+
+            getEl('btnDownloadPdf').addEventListener('click', () => generatePDFTextBased(wrapper));
+
+            renderMath();
+        }
+
+        async function generatePDFTextBased(element) {
+            try {
+                setStatus('Mempersiapkan PDF...', true);
+                await (document.fonts ? document.fonts.ready : Promise.resolve());
+                if (window.MathJax && MathJax.typesetPromise) await MathJax.typesetPromise([element]);
+
+                const filename = `Soal_Ujian_${new Date().toISOString().slice(0,10)}.pdf`;
+                const doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+                const marginLeft = 10;
+                const marginTop = 10;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const usableWidth = pageWidth - marginLeft * 2;
+
+                await doc.html(element, {
+                    x: marginLeft,
+                    y: marginTop,
+                    html2canvas: { scale: 1, useCORS: true, backgroundColor: '#ffffff' },
+                    callback: function (doc) {
+                        doc.save(filename);
+                        setStatus('PDF berhasil diunduh.');
+                    },
+                    width: usableWidth
+                });
+            } catch (err) {
+                console.error('generatePDF error', err);
+                try {
+                    const opt = {
+                        margin: [10,10,10,10],
+                        filename: `Soal_Ujian_${new Date().toISOString().slice(0,10)}.pdf`,
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2, useCORS: true, logging: false },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+                    await html2pdf().set(opt).from(element).save();
+                    setStatus('PDF berhasil diunduh (fallback gambar).');
+                } catch(e) {
+                    console.error('Fallback html2pdf failed', e);
+                    setStatus('Gagal membuat PDF.');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchQuestionFiles();
+            getEl('btnGenerate').addEventListener('click', () => {
+                if (state.loading) return;
+                renderPracticeMode(getFilteredQuestions());
+            });
+            getEl('btnExamMode').addEventListener('click', () => {
+                if (state.loading) return;
+                renderExamMode(getFilteredQuestions());
+            });
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 6c3e99e0c5d252d35f655f05fb596196040482a2

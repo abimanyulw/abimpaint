@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Game - Abimanyu Learning Center</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts (Inter + Amiri for Arabic) -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:italic,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Konfigurasi Tailwind Kustom -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050000',      
+                        'dark-card': '#100202',
+                        primary: '#ff0055',    /* Pink Neon */
+                        secondary: '#ff4d80',  
+                        accent: '#ff99aa',
+                        success: '#00ff9d',
+                        'tajweed-nun': '#ff6b6b',   /* Red-Pink for Nun */
+                        'tajweed-mim': '#ff8787',   /* Light Red-Pink for Mim */
+                        'tajweed-mad': '#fca5a5',   /* Pale Pink for Mad */
+                        'tajweed-qol': '#ff4d4d',   /* Strong Pink for Qolqolah */
+                        'tajweed-lam': '#f87171',   /* Medium Pink for Lam */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(255, 0, 85, 0.3)',
+                        'glow-sm': '0 0 10px rgba(255, 0, 85, 0.1)',
+                        'glow-strong': '0 0 30px rgba(255, 0, 85, 0.5)',
+                        'arabic-glow': '0 0 10px rgba(255,255,255,0.2)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                        'bounce-short': 'bounceShort 0.5s ease-in-out 1',
+                        'spin-slow': 'spin 3s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        bounceShort: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Scrollbar Kustom */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050000; }
+        ::-webkit-scrollbar-thumb { background: #66001a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(16, 2, 2, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 0, 85, 0.15);
+        }
+
+        /* Background Ambient */
+        @keyframes ambient-pulse-slow {
+            0%, 100% { opacity: 0.04; transform: scale(1); }
+            50% { opacity: 0.08; transform: scale(1.1); }
+        }
+        .bg-ambient-1 { animation: ambient-pulse-slow 10s ease-in-out infinite; }
+        
+        /* Game Specific Styles */
+        .word-btn {
+            transition: all 0.2s;
+            user-select: none;
+            font-family: 'Amiri', serif;
+            font-size: 1.75rem; 
+            line-height: 2.5rem;
+        }
+        .word-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Arabic Text Direction */
+        .rtl-text {
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* Tajweed Highlight Styles - Updated to Pink Theme */
+        .tj-box {
+            display: inline-block;
+            border-radius: 8px;
+            padding: 0 4px;
+            margin: 0 2px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .tj-nun { border-color: #ff6b6b; background-color: rgba(255, 107, 107, 0.15); color: #ffe4e6; }
+        .tj-mim { border-color: #ff8787; background-color: rgba(255, 135, 135, 0.15); color: #ffe4e6; }
+        .tj-mad { border-color: #fca5a5; background-color: rgba(252, 165, 165, 0.15); color: #fff1f2; }
+        .tj-qol { border-color: #ff4d4d; background-color: rgba(255, 77, 77, 0.15); color: #ffe4e6; }
+        .tj-lam { border-color: #f87171; background-color: rgba(248, 113, 113, 0.15); color: #ffe4e6; }
+        
+        /* Loader */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #ff0055;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#050000] text-gray-200 min-h-screen font-sans overflow-x-hidden selection:bg-primary selection:text-white relative">
+
+    <!-- Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none bg-[#050000]">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050000] via-[#0a0202] to-[#050000] opacity-100"></div>
+        <div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-[0.05] bg-ambient-1"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.reload()">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center animate-pulse-slow shadow-glow-sm">
+                        <i class="fa-solid fa-book-quran text-white text-lg"></i>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="font-bold text-lg tracking-wide text-white">QURAN <span class="text-primary">GAME</span></span>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-widest">Abimanyu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Game Container -->
+    <main class="relative z-10 pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto min-h-screen flex flex-col justify-center">
+
+        <!-- VIEW 1: START SCREEN -->
+        <div id="start-screen" class="text-center animate-fade-in max-w-2xl mx-auto">
+            <div class="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 flex items-center justify-center mb-6 shadow-glow-sm animate-float">
+                <i class="fa-solid fa-book-quran text-5xl text-primary"></i>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Tantangan <span class="text-primary">Al-Quran</span></h1>
+            <p class="text-gray-400 mb-8 text-lg">
+                Belajar Tajwid Interaktif. Susun ayat Arab, analisa hukum bacaan, dan pelajari tafsir lengkap.
+            </p>
+            
+           <div class="glass-panel p-6 rounded-2xl border border-white/5 mb-8 text-left">
+                <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-secondary"></i> Cara Bermain
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex items-start gap-3">
+                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">1</span>
+                        <span><strong>Menyusun Ayat:</strong> Susun kata-kata yang diacak menjadi ayat yang benar.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">2</span>
+                        <span><strong>Tebak Tajwid:</strong> Identifikasi hukum bacaan (Mad, Qolqolah, Nun Sukun, dll) pada ayat tersebut.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="bg-primary/20 text-primary w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold mt-0.5">3</span>
+                        <span><strong>Tafsir:</strong> Baca arti dan tafsir setelah berhasil menyelesaikan tantangan.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-indicator" class="hidden mb-6 flex flex-col items-center">
+                <div class="loader mb-3"></div>
+                <span class="text-sm text-gray-400">Memuat data quran.csv...</span>
+            </div>
+
+            <button id="btn-start" onclick="startGame()" disabled class="group relative px-8 py-4 bg-gray-700 text-gray-400 rounded-xl font-bold text-lg cursor-not-allowed transition-all overflow-hidden w-full md:w-auto">
+                <span class="relative z-10 flex items-center justify-center gap-2">
+                    <span id="btn-text">Memuat Data...</span> <i class="fa-solid fa-download"></i>
+                </span>
+            </button>
+            <p id="error-msg" class="text-red-400 text-xs mt-3 hidden">Pastikan file quran.csv ada di folder yang sama dan gunakan Local Server.</p>
+        </div>
+
+        <!-- VIEW 2: GAMEPLAY AREA -->
+        <div id="game-screen" class="hidden animate-fade-in w-full">
+            
+            <!-- Progress Header -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-sm font-medium text-gray-400">
+                    Surah: <span id="game-surah-name" class="text-white font-bold">Al-Fatihah</span>
+                </div>
+                <div class="flex gap-2">
+                    <div class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300">
+                        <i class="fa-solid fa-puzzle-piece text-primary mr-1"></i> Tahap 1: Susun
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 1: PUZZLE CONTAINER -->
+            <div id="stage-puzzle" class="w-full">
+                <!-- Ditambahkan dir="rtl" agar susunan dimulai dari kanan -->
+                <div class="glass-panel p-1 rounded-2xl min-h-[180px] border border-white/10 mb-6 flex flex-wrap items-center justify-center content-center gap-3 p-4" id="puzzle-area" dir="rtl">
+                    <span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-white/5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-gray-300 font-medium text-sm">Potongan Ayat (Acak)</h3>
+                        <button onclick="resetPuzzle()" class="text-xs text-primary hover:text-white underline"><i class="fa-solid fa-rotate-right mr-1"></i> Reset</button>
+                    </div>
+                    <div id="word-bank" class="flex flex-wrap justify-center gap-3 rtl-text" dir="rtl">
+                        <!-- Buttons injected by JS -->
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-center">
+                    <button onclick="checkPuzzle()" id="btn-check-puzzle" class="px-8 py-3 bg-white/10 hover:bg-primary hover:text-white text-gray-300 rounded-lg font-bold transition-all border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Periksa Susunan
+                    </button>
+                </div>
+            </div>
+
+            <!-- STAGE 2: TAJWID QUIZ CONTAINER -->
+            <div id="stage-tajweed" class="hidden w-full">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-white mb-2">Analisa Hukum Tajwid</h2>
+                    <p class="text-gray-400 text-sm">Perhatikan bagian ayat yang <span class="text-white font-bold border-b-2 border-primary">DITANDAI</span>. Apa hukum bacaannya?</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl border border-white/10 mb-8 flex justify-center items-center min-h-[150px] bg-black/40">
+                    <!-- Displayed Arabic Text with Highlight -->
+                    <div id="tajweed-display" class="text-4xl md:text-6xl font-arabic font-bold leading-loose rtl-text text-gray-100 shadow-arabic-glow">
+                        <!-- Injected JS -->
+                    </div>
+                </div>
+
+                <div id="tajweed-options" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- VIEW 3: RESULT & TAFSIR -->
+        <div id="result-screen" class="hidden animate-slide-up w-full">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success/20 text-success mb-4 shadow-[0_0_20px_rgba(0,255,157,0.3)]">
+                    <i class="fa-solid fa-check text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2">Masya Allah! Benar.</h2>
+                <p class="text-gray-400">Anda telah menyelesaikan ayat ini dengan baik.</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl overflow-hidden border border-white/10">
+                <!-- Ayat Display -->
+                <div class="p-8 bg-black/40 border-b border-white/5 text-center">
+                    <h3 id="result-surah" class="text-primary text-sm font-bold tracking-widest uppercase mb-4">QS. Al-Fatihah: 1</h3>
+                    <p id="result-arabic" class="font-arabic text-4xl md:text-5xl leading-normal text-white mb-6 rtl-text shadow-arabic-glow"></p>
+                    <p id="result-latin" class="text-gray-400 italic text-lg"></p>
+                </div>
+
+                <!-- Translation & Tafsir -->
+                <div class="p-6 md:p-8">
+                    
+                    <!-- 1. TERJEMAHAN (Dulu: Tafsir Wajiz) -->
+                    <div class="mb-6">
+                        <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-language text-secondary"></i> Terjemahan
+                        </h4>
+                        <p id="result-translation" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                    </div>
+
+                    <!-- 2. TAFSIR WAJIZ (Dulu: Tafsir Tahlili) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
+                        <h4 class="text-secondary font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-book-open"></i> Tafsir Wajiz
+                        </h4>
+                        <p id="result-tafsir-wajiz" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify"></p>
+                    </div>
+
+                    <!-- 3. TAFSIR TAHLILI (Dulu: Asbabun Nuzul) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5 mb-4">
+                        <h4 class="text-accent font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-book-open-reader"></i> Tafsir Tahlili
+                        </h4>
+                        <p id="result-tafsir-tahlili" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
+                    </div>
+
+                    <!-- 4. ASBABUN NUZUL (Dulu: Keterangan Tambahan) -->
+                    <div class="bg-white/5 rounded-xl p-5 border border-white/5">
+                        <h4 class="text-primary font-bold mb-2 flex items-center gap-2">
+                            <!-- ICON DIUBAH KE PINK SCHEME -->
+                            <i class="fa-solid fa-circle-info"></i> Asbabun Nuzul
+                        </h4>
+                        <p id="result-tafsir-nuzul" class="text-gray-300 leading-relaxed text-sm md:text-base text-justify italic"></p>
+                    </div>
+
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-6 bg-black/20 border-t border-white/5 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div class="text-sm text-gray-500">
+                        <i class="fa-solid fa-star text-yellow-500 mr-1"></i> Skor: <span id="score-display" class="text-white font-bold">100</span>
+                    </div>
+                    <button onclick="resetGame()" class="w-full md:w-auto px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-lg text-sm font-medium transition-colors">
+                        Main Ayat Lain
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- GLOBAL VARIABLES ---
+        let quranData = [];
+        let currentAyah = null;
+        let puzzleState = {
+            words: [],      
+            shuffled: [],   
+            current: []     
+        };
+        let tajweedState = {
+            targetRule: null,
+            options: []
+        };
+        let score = 0;
+        let isDataLoaded = false;
+
+        // --- UNICODE CONSTANTS ---
+        const TANWIN_FATHAH = '\u064B'; // ً
+        const TANWIN_DHAMMAH = '\u064C'; // ٌ
+        const TANWIN_KASRAH = '\u064D'; // ٍ
+        const SUKUN = '\u0652'; // ْ
+        const HAMZAH = '\u0621'; // ء
+        const ALIF = '\u0627'; // ا
+        const WAW = '\u0648'; // و
+        const YA = '\u064A'; // ي
+        const LAM = '\u0644'; // ل
+        const MIM = '\u0645'; // م
+        const NUN = '\u0646'; // ن
+        const BA = '\u0628'; // ب
+        const SPACE = ' ';
+
+        // --- TAJWEED DATA SETS ---
+        const hurufIzharHalqi = ['ء','ه','ع','ح','غ','خ'];
+        const hurufIdghamBighunnah = ['ي','ن','م','و'];
+        const hurufIdghamBilaghunnah = ['ل','ر'];
+        const hurufIqlab = ['ب'];
+        const hurufIkhfa = ['ت','ث','ج','د','ذ','ز','س','ش','ص','ض','ط','ظ','ف','ق','ك']; 
+
+        const hurufSyamsiyah = ['ت','ث','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ل','ن'];
+        const hurufQamariyah = ['ا','ب','ج','ح','خ','ع','غ','ف','ق','ك','م','هـ','و','ي']; 
+
+        const hurufQolqalah = ['ق','ط','ب','ج','د'];
+
+        // --- INIT & FETCHING ---
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadQuranData();
+        });
+
+        async function loadQuranData() {
+            const loadingEl = document.getElementById('loading-indicator');
+            const btnStart = document.getElementById('btn-start');
+            const btnText = document.getElementById('btn-text');
+            const errorMsg = document.getElementById('error-msg');
+
+            try {
+                loadingEl.classList.remove('hidden');
+                const response = await fetch('quran.csv');
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const csvText = await response.text();
+                parseCSV(csvText);
+                
+                isDataLoaded = true;
+                loadingEl.classList.add('hidden');
+                
+                btnStart.disabled = false;
+                btnStart.classList.remove('bg-gray-700', 'text-gray-400', 'cursor-not-allowed');
+                btnStart.classList.add('bg-gradient-to-r', 'from-primary', 'to-secondary', 'text-white', 'shadow-glow', 'hover:shadow-glow-strong', 'hover:scale-105', 'cursor-pointer');
+                btnText.innerText = "Mulai Game";
+                btnStart.querySelector('i').className = "fa-solid fa-play group-hover:translate-x-1 transition-transform";
+                
+            } catch (error) {
+                console.error("Gagal memuat CSV:", error);
+                loadingEl.classList.add('hidden');
+                btnText.innerText = "Gagal Memuat Data";
+                errorMsg.classList.remove('hidden');
+                showToast("Gagal memuat quran.csv. Gunakan Local Server!", "error");
+            }
+        }
+
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            for(let i=1; i<lines.length; i++) {
+                const row = parseCSVLine(lines[i]);
+                if(row.length < 19) continue; 
+
+                quranData.push({
+                    id: row[0],
+                    surah_latin: row[3],
+                    surah_translation: row[5],
+                    ayah_num: row[9],
+                    arabic: row[14], 
+                    latin: row[15],
+                    translation: row[16],      // Digunakan untuk Terjemahan
+                    tafsir_wajiz: row[17],     // Digunakan untuk Tafsir Wajiz
+                    tafsir_tahlili: row[18],   // Digunakan untuk Tafsir Tahlili
+                    tafsir_sabab_nuzul: row[19] // Digunakan untuk Asbabun Nuzul
+                });
+            }
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let startValueIndex = 0;
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') inQuotes = !inQuotes;
+                if (char === ',' && !inQuotes) {
+                    let val = line.substring(startValueIndex, i);
+                    if (val.startsWith('"') && val.endsWith('"')) {
+                        val = val.slice(1, -1).replace(/""/g, '"');
+                    }
+                    result.push(val);
+                    startValueIndex = i + 1;
+                }
+            }
+            let lastVal = line.substring(startValueIndex);
+            if (lastVal.startsWith('"') && lastVal.endsWith('"')) {
+                lastVal = lastVal.slice(1, -1).replace(/""/g, '"');
+            }
+            result.push(lastVal);
+            return result;
+        }
+
+        // --- GAME FLOW ---
+
+        function startGame() {
+            if(!isDataLoaded || quranData.length === 0) return;
+
+            currentAyah = quranData[Math.floor(Math.random() * quranData.length)];
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            document.getElementById('game-surah-name').innerText = `${currentAyah.surah_latin}: ${currentAyah.ayah_num}`;
+            initPuzzle();
+        }
+
+        function resetGame() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            score = 0;
+        }
+
+        // --- STAGE 1: PUZZLE LOGIC ---
+
+        function initPuzzle() {
+            document.getElementById('stage-puzzle').classList.remove('hidden');
+            document.getElementById('stage-tajweed').classList.add('hidden');
+            document.getElementById('btn-check-puzzle').disabled = true;
+
+            puzzleState.words = currentAyah.arabic.trim().split(' ');
+            puzzleState.current = [];
+            puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
+
+            renderPuzzleUI();
+        }
+
+        function renderPuzzleUI() {
+            const bankContainer = document.getElementById('word-bank');
+            const puzzleArea = document.getElementById('puzzle-area');
+            
+            bankContainer.innerHTML = '';
+            puzzleArea.innerHTML = '';
+
+            puzzleState.shuffled.forEach((word, index) => {
+                const btn = document.createElement('button');
+                btn.className = "word-btn px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:border-primary hover:bg-primary/20 hover:shadow-glow-sm transition-all";
+                btn.innerText = word;
+                btn.onclick = () => selectWord(word, index);
+                bankContainer.appendChild(btn);
+            });
+
+            if(puzzleState.current.length === 0) {
+                 puzzleArea.innerHTML = '<span class="text-gray-600 text-sm italic pointer-events-none">Klik kata di bawah untuk menyusun ayat...</span>';
+            } else {
+                puzzleState.current.forEach((word, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "word-btn px-5 py-3 rounded-xl bg-primary/20 border border-primary/50 text-white shadow-glow-sm hover:bg-red-900/40 transition-all";
+                    btn.innerText = word;
+                    btn.onclick = () => deselectWord(index);
+                    puzzleArea.appendChild(btn);
+                });
+            }
+
+            const checkBtn = document.getElementById('btn-check-puzzle');
+            if(puzzleState.current.length === puzzleState.words.length) {
+                checkBtn.disabled = false;
+                checkBtn.classList.remove('bg-white/10', 'text-gray-300');
+                checkBtn.classList.add('bg-primary', 'text-white', 'animate-pulse-slow');
+            } else {
+                checkBtn.disabled = true;
+                checkBtn.classList.add('bg-white/10', 'text-gray-300');
+                checkBtn.classList.remove('bg-primary', 'text-white', 'animate-pulse-slow');
+            }
+        }
+
+        function selectWord(word, shuffledIndex) {
+            puzzleState.current.push(word);
+            puzzleState.shuffled.splice(shuffledIndex, 1);
+            renderPuzzleUI();
+        }
+
+        function deselectWord(currentIndex) {
+            const word = puzzleState.current[currentIndex];
+            puzzleState.current.splice(currentIndex, 1);
+            puzzleState.shuffled.push(word);
+            renderPuzzleUI();
+        }
+
+        function resetPuzzle() {
+            puzzleState.current = [];
+            puzzleState.shuffled = [...puzzleState.words].sort(() => Math.random() - 0.5);
+            renderPuzzleUI();
+        }
+
+        function checkPuzzle() {
+            const userSentence = puzzleState.current.join(' ');
+            const correctSentence = puzzleState.words.join(' ');
+
+            if(userSentence === correctSentence) {
+                showToast("Susunan Benar!", "success");
+                score += 50;
+                initTajweedStage();
+            } else {
+                showToast("Masih salah, coba lagi.", "error");
+                const area = document.getElementById('puzzle-area');
+                area.classList.add('animate-bounce-short');
+                setTimeout(() => area.classList.remove('animate-bounce-short'), 500);
+            }
+        }
+
+        // --- STAGE 2: TAJWID ALGORITHM ---
+
+        function initTajweedStage() {
+            document.getElementById('stage-puzzle').classList.add('hidden');
+            document.getElementById('stage-tajweed').classList.remove('hidden');
+
+            const text = currentAyah.arabic;
+            const rules = analyzeTajweed(text);
+
+            if(rules.length === 0) {
+                tajweedState.targetRule = { type: 'Umum', label: 'Bacaan Umum', start: 0, end: 1, colorClass: 'border-gray-500 bg-gray-500/10' }; 
+            } else {
+                tajweedState.targetRule = rules[Math.floor(Math.random() * rules.length)];
+            }
+
+            renderTajweedText(text, tajweedState.targetRule);
+            generateTajweedOptions(tajweedState.targetRule.label);
+        }
+
+        function analyzeTajweed(text) {
+            const detected = [];
+            const len = text.length;
+
+            for (let i = 0; i < len; i++) {
+                const char = text[i];
+                const nextChar = i < len - 1 ? text[i+1] : null;
+                
+                // 1. HUKUM NUN SUKUN & TANWIN
+                if (char === NUN && nextChar === SUKUN) {
+                    const target = i < len - 2 ? text[i+2] : null;
+                    if (target) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-nun' };
+                        if (hurufIzharHalqi.includes(target)) {
+                            rule.label = "Izhar Halqi";
+                        } else if (hurufIdghamBighunnah.includes(target)) {
+                            rule.label = "Idgham Bighunnah";
+                            rule.end = i+2; 
+                        } else if (hurufIdghamBilaghunnah.includes(target)) {
+                            rule.label = "Idgham Bilaghunnah";
+                            rule.end = i+2;
+                        } else if (hurufIqlab.includes(target)) {
+                            rule.label = "Iqlab";
+                            rule.end = i+2;
+                        } else {
+                            rule.label = "Ikhfa Haqiqi";
+                            rule.end = i+2;
+                        }
+                        detected.push(rule);
+                    }
+                }
+                
+                else if ([TANWIN_FATHAH, TANWIN_DHAMMAH, TANWIN_KASRAH].includes(char)) {
+                    const target = nextChar;
+                    if (target && target !== SPACE) {
+                        let rule = { start: i-1, end: i, colorClass: 'tj-nun' }; 
+                        if(i > 0) rule.start = i-1;
+
+                        if (hurufIzharHalqi.includes(target)) {
+                            rule.label = "Izhar Halqi (Tanwin)";
+                        } else if (hurufIdghamBighunnah.includes(target)) {
+                            rule.label = "Idgham Bighunnah (Tanwin)";
+                        } else if (hurufIdghamBilaghunnah.includes(target)) {
+                            rule.label = "Idgham Bilaghunnah (Tanwin)";
+                        } else if (hurufIqlab.includes(target)) {
+                            rule.label = "Iqlab (Tanwin)";
+                        } else {
+                            rule.label = "Ikhfa Haqiqi (Tanwin)";
+                        }
+                        detected.push(rule);
+                    }
+                }
+
+                // 2. HUKUM MIM SUKUN
+                else if (char === MIM && nextChar === SUKUN) {
+                    const target = i < len - 2 ? text[i+2] : null;
+                    if (target) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-mim' };
+                        if (target === BA) {
+                            rule.label = "Ikhfa Syafawi";
+                            rule.end = i+2;
+                        } else if (target === MIM) {
+                            rule.label = "Idgham Mimi (Mitslain)";
+                            rule.end = i+2;
+                        } else {
+                            rule.label = "Izhar Syafawi";
+                        }
+                        detected.push(rule);
+                    }
+                }
+
+                // 3. HUKUM MAD
+                else if (nextChar && 
+                        ((char === '\u064E' && nextChar === ALIF) || 
+                         (char === '\u064F' && nextChar === WAW) ||   
+                         (char === '\u0650' && nextChar === YA))) {   
+                    detected.push({
+                        start: i, end: i+1, label: "Mad Thabi'i", colorClass: 'tj-mad'
+                    });
+                }
+                else if ([ALIF, WAW, YA].includes(char)) {
+                    let foundHamzah = false;
+                    let hamzahIndex = -1;
+                    for(let j=i+1; j < len && text[j] !== SPACE; j++) {
+                        if(text[j] === HAMZAH) {
+                            foundHamzah = true;
+                            hamzahIndex = j;
+                            break;
+                        }
+                    }
+                    if(foundHamzah) {
+                        detected.push({
+                            start: i, end: i, label: "Mad Wajib Muttashil", colorClass: 'tj-mad'
+                        });
+                    }
+                }
+                else if ((char === YA || char === WAW) && i > 0 && text[i-1] === '\u064E') { 
+                    const after = i < len - 1 ? text[i+1] : null;
+                    if (after === SPACE || after === null || after === SUKUN) {
+                        detected.push({
+                            start: i, end: i, label: "Mad Lin (Jika Waqaf)", colorClass: 'tj-mad'
+                        });
+                    }
+                }
+
+                // 4. HUKUM QALQALAH
+                else if (hurufQolqalah.includes(char)) {
+                    const after = i < len - 1 ? text[i+1] : null;
+                    if (after === null || after === SPACE) {
+                        detected.push({
+                            start: i, end: i, label: "Qalqalah Kubra", colorClass: 'tj-qol'
+                        });
+                    } 
+                    else if (after === SUKUN) {
+                        detected.push({
+                            start: i, end: i+1, label: "Qalqalah Sugra", colorClass: 'tj-qol'
+                        });
+                    }
+                }
+
+                // 5. HUKUM ALIF LAM
+                else if (char === ALIF && nextChar === LAM) {
+                    const afterLam = i < len - 2 ? text[i+2] : null;
+                    if (afterLam) {
+                        let rule = { start: i, end: i+1, colorClass: 'tj-lam' };
+                        if (hurufSyamsiyah.includes(afterLam)) {
+                            rule.label = "Alif Lam Syamsiyah";
+                        } else if (hurufQamariyah.includes(afterLam)) {
+                            rule.label = "Alif Lam Qamariyah";
+                        }
+                        detected.push(rule);
+                    }
+                }
+            }
+            return detected;
+        }
+
+        function renderTajweedText(fullText, target) {
+            const container = document.getElementById('tajweed-display');
+            container.innerHTML = '';
+
+            const before = fullText.substring(0, target.start);
+            const targetPart = fullText.substring(target.start, target.end + 1); 
+            const after = fullText.substring(target.end + 1);
+
+            const spanBefore = document.createElement('span');
+            spanBefore.innerText = before;
+            
+            const spanHighlight = document.createElement('span');
+            spanHighlight.className = `tj-box ${target.colorClass} font-bold scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]`;
+            spanHighlight.innerText = targetPart;
+
+            const spanAfter = document.createElement('span');
+            spanAfter.innerText = after;
+
+            container.append(spanBefore, spanHighlight, spanAfter);
+        }
+
+        function generateTajweedOptions(correctLabel) {
+            const container = document.getElementById('tajweed-options');
+            container.innerHTML = '';
+
+            const allLabels = [
+                'Izhar Halqi', 'Idgham Bighunnah', 'Idgham Bilaghunnah', 
+                'Iqlab', 'Ikhfa Haqiqi', 'Ikhfa Syafawi', 'Idgham Mimi (Mitslain)',
+                'Izhar Syafawi', 'Mad Thabi\'i', 'Mad Wajib Muttashil', 'Mad Lin (Jika Waqaf)',
+                'Qalqalah Sugra', 'Qalqalah Kubra', 'Alif Lam Syamsiyah', 'Alif Lam Qamariyah'
+            ];
+
+            const wrongOptions = allLabels.filter(l => l !== correctLabel);
+            wrongOptions.sort(() => Math.random() - 0.5);
+            const selectedWrong = wrongOptions.slice(0, 3);
+
+            const options = [...selectedWrong, correctLabel];
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 rounded-xl bg-white/5 border border-white/10 hover:border-primary hover:bg-white/10 text-left transition-all group";
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full border border-gray-600 group-hover:border-primary flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-check opacity-0 group-hover:opacity-100 text-primary"></i>
+                        </div>
+                        <span class="text-gray-300 font-medium group-hover:text-white text-sm md:text-base">${opt}</span>
+                    </div>
+                `;
+                btn.onclick = () => checkTajweedAnswer(opt, correctLabel, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkTajweedAnswer(selected, correct, btnElement) {
+            if(selected === correct) {
+                score += 50;
+                btnElement.classList.remove('bg-white/5');
+                btnElement.classList.add('bg-primary/20', 'border-primary');
+                showToast("Tajwid Tepat!", "success");
+                setTimeout(showResult, 1000);
+            } else {
+                btnElement.classList.add('bg-red-500/20', 'border-red-500');
+                btnElement.querySelector('span').classList.add('text-red-400');
+                showToast("Salah, coba perhatikan lagi.", "error");
+            }
+        }
+
+        // --- RESULT SCREEN ---
+
+        function showResult() {
+            document.getElementById('game-screen').classList.add('hidden');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('result-surah').innerText = `QS. ${currentAyah.surah_latin}: ${currentAyah.ayah_num} (${currentAyah.surah_translation})`;
+            document.getElementById('result-arabic').innerText = currentAyah.arabic;
+            document.getElementById('result-latin').innerText = currentAyah.latin;
+            
+            // Sesuai perbaikan label:
+            document.getElementById('result-translation').innerText = currentAyah.translation; // Terjemahan
+            document.getElementById('result-tafsir-wajiz').innerText = currentAyah.tafsir_wajiz; // Tafsir Wajiz
+            document.getElementById('result-tafsir-tahlili').innerText = currentAyah.tafsir_tahlili; // Tafsir Tahlili
+            document.getElementById('result-tafsir-nuzul').innerText = currentAyah.tafsir_sabab_nuzul; // Asbabun Nuzul
+
+            document.getElementById('score-display').innerText = score;
+        }
+
+        // --- UTILS ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = type === 'success' ? 'from-green-600 to-emerald-700' : 
+                          type === 'error' ? 'from-red-600 to-rose-700' : 
+                          'from-primary to-secondary';
+            
+            let iconClass = type === 'success' ? 'fa-check' : type === 'error' ? 'fa-xmark' : 'fa-info-circle';
+
+            toast.className = `px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 translate-y-10 opacity-0 bg-gradient-to-r ${bgClass} border border-white/10 backdrop-blur-md flex items-center gap-3 pointer-events-auto min-w-[300px]`;
+            toast.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid ${iconClass} text-xs"></i>
+                </div>
+                ${message}
+            `;
+            
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
